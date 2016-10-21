@@ -458,7 +458,6 @@
 				B036CD3B1D7EC1C90015610C /* EmailViewController.h */,
 				B036CD3C1D7EC1C90015610C /* EmailViewController.m */,
 				B036CD3F1D7EC1D70015610C /* mail.storyboard */,
-				B036CD411D7EC2C80015610C /* CustomCollectionViewCell.xib */,
 				B03604FD1D810204001FD235 /* setEmailViewController.h */,
 				B03604FE1D810204001FD235 /* setEmailViewController.m */,
 				B03605001D810216001FD235 /* setEmail.storyboard */,
@@ -471,6 +470,7 @@
 			children = (
 				B036CD391D7EC1C90015610C /* CustomCollectionViewCell.h */,
 				B036CD3A1D7EC1C90015610C /* CustomCollectionViewCell.m */,
+				B036CD411D7EC2C80015610C /* CustomCollectionViewCell.xib */,
 				B0070B001D8681B7008E0BE8 /* SWTableViewCell.h */,
 				B0070B011D8681B7008E0BE8 /* SWTableViewCell.m */,
 				B03605021D816C44001FD235 /* mailTableViewCell.h */,
@@ -666,12 +666,12 @@
 		B0B6094C1D6232E000F21DD3 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = struggle;
 				TargetAttributes = {
 					B0B609531D6232E000F21DD3 = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = L39ZUYWLGF;
+						DevelopmentTeam = YE35Q27T99;
 					};
 					B0B6096C1D6232E100F21DD3 = {
 						CreatedOnToolsVersion = 7.2;
@@ -873,8 +873,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -896,7 +898,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -916,8 +918,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -933,7 +937,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -945,16 +949,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Xu Gui Zhou (L39ZUYWLGF)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Xu Gui Zhou (L39ZUYWLGF)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = YE35Q27T99;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = SKYOA/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.corsyn.LSKYOAY;
 				PRODUCT_NAME = SKYOA;
-				PROVISIONING_PROFILE = "47aaef52-8465-47e2-978d-f012adb02323";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -964,15 +969,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Xu Gui Zhou (L39ZUYWLGF)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Xu Gui Zhou (L39ZUYWLGF)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = YE35Q27T99;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = SKYOA/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.corsyn.LSKYOAY;
 				PRODUCT_NAME = SKYOA;
-				PROVISIONING_PROFILE = "47aaef52-8465-47e2-978d-f012adb02323";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

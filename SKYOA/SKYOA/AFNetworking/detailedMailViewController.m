@@ -180,11 +180,11 @@
     vc.personData1 = self.personData1;
     //设置回复前的内容信息
     NSString * line = @"H~~~~~~~原始邮件~~~~~~~H\n";
-    NSString * sendMan = [NSString stringWithFormat:@"  发件人:%@\n",self.dic[@"sender"]];
+    NSString * sendMan = [NSString stringWithFormat:@"  发件人:  %@\n\n",self.dic[@"sender"]];
     //发件时间
-    NSString * time = [NSString stringWithFormat:@"  发件时间:%@\n",self.model.SEND_TIME];
+    NSString * time = [NSString stringWithFormat:@"  发件时间:  %@\n\n",self.model.SEND_TIME];
     //主题
-    NSString * title = [NSString stringWithFormat:@"  主题:回复：%@\n",self.dic[@"subject"]];
+    NSString * title = [NSString stringWithFormat:@"  主题:回复：%@\n\n",self.dic[@"subject"]];
     NSString  * content = self.textView.text;
     NSString * togetter = [NSString stringWithFormat:@"%@%@%@%@%@",line,sendMan,time,title,content];
     //标题和内容打包

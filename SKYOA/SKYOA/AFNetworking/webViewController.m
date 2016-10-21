@@ -243,7 +243,7 @@
         
     }
 }
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(nullable NSError *)error{
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
     UIAlertView *alter = [[UIAlertView alloc] initWithTitle:@"" message:@"网页加载失败！" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alter show];
     if ([error code] == NSURLErrorCancelled) {

@@ -281,14 +281,17 @@
     
     for (int i = 0; i < arr.count+1; i++) {
         if (i<arr.count) {
+            UIGestureRecognizer * recoginzer = [[UIGestureRecognizer alloc]initWithTarget:self action:@selector(delete:)];
             UILabel * label = [[UILabel alloc]init];
+            label.tag = 100+i;
+            [label addGestureRecognizer:recoginzer];
             label.userInteractionEnabled = YES;
-            UIButton * delete = [[UIButton alloc]initWithFrame:CGRectMake(itemW-20, 0, 15, 15)];
-            [delete setImage:[UIImage imageNamed:@"hao"] forState:UIControlStateNormal];
-            delete.tag =100+i;
-            [delete addTarget:self action:@selector(delete:) forControlEvents:UIControlEventTouchDown];
-            
-            [label addSubview:delete];
+//            UIButton * delete = [[UIButton alloc]initWithFrame:CGRectMake(itemW-20, 0, 15, 15)];
+//            [delete setImage:[UIImage imageNamed:@"hao"] forState:UIControlStateNormal];
+//            delete.tag =100+i;
+//            [delete addTarget:self action:@selector(delete:) forControlEvents:UIControlEventTouchDown];
+//            
+//            [label addSubview:delete];
             itemX = KMargin + (i % KNumberOfColumns) * (KMargin + itemW);
             itemY = KMargin + (i / KNumberOfColumns) * (KMargin + itemH) ;
             

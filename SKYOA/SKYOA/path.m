@@ -14,13 +14,13 @@
     NSDictionary * arr = [[NSDictionary alloc]initWithContentsOfFile:fielPath];
     NSString * str = @"http://";
     NSString * POSTstr;
-    if ([arr[@"服务器"]isEqualToString:@"121.15.254.8"]) {
-        //兼容ipv6
-       POSTstr = [str stringByAppendingString:@"www.huizhouhecheng.com"];
-    }else if ([arr[@"服务器"]isEqualToString:@"19.89.119.59"]){
-       POSTstr = [str stringByAppendingString:@"19.89.119.59"];
-    }
-    
+//    if ([arr[@"服务器"]isEqualToString:@"121.15.254.8"]) {
+//        //兼容ipv6
+//       POSTstr = [str stringByAppendingString:@"www.huizhouhecheng.com"];
+//    }else if ([arr[@"服务器"]isEqualToString:@"19.89.119.59"]){
+//       POSTstr = [str stringByAppendingString:@"19.89.119.59"];
+//    }
+    POSTstr = [str stringByAppendingString:arr[@"服务器"]];
     NSString * d = [NSString stringWithFormat:@":%@",arr[@"端口号"]];
     POSTstr = [POSTstr stringByAppendingString:d];
     NSString * oa = [NSString stringWithFormat:@"/%@",arr[@"oa"]];

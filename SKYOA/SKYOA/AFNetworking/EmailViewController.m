@@ -52,6 +52,13 @@
 //记录要跳转到详细页面时候的草稿箱，收发件箱
 @property (nonatomic, copy) NSString *num;
 
+//收件箱cell
+@property (nonatomic, strong) CustomCollectionViewCell *CustomCollectionViewCell1;
+//发件箱cell
+@property (nonatomic, strong) CustomCollectionViewCell *CustomCollectionViewCell2;
+//草稿箱cell
+@property (nonatomic, strong) CustomCollectionViewCell *CustomCollectionViewCell3;
+
 //搜索部分
 @property (strong, nonatomic) UITableView *friendTableView;
 @property (strong, nonatomic) UISearchBar *searchBar;
@@ -92,7 +99,7 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    _CustomCollectionViewCell1 = self.CustomCollectionViewCell1;
     //左边的导航栏按钮
     UIButton * doBack = [UIButton BarButtonItemWithTitle:@"返回" addImage:[UIImage imageNamed:@"return"]];
     //给返回按钮添加点击事件
@@ -132,8 +139,6 @@
     });
     //搜索部分
     self.view.backgroundColor = [UIColor whiteColor];
-    
-
     [self.view addSubview:self.searchBar];
     
 }
@@ -221,6 +226,12 @@
 -(void)doBack{
     self.navigationController.navigationBarHidden = YES;
     [self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    
+}
+
+-(void)dealloc{
+    NSLog(@"释放");
 }
 //搜索部分
 #pragma mark - Init
@@ -348,6 +359,20 @@
     }
     VC.isSearch = YES;
     [self.navigationController pushViewController:VC animated:YES];
+    
+    //退出，没查询标识
+    self.Search = NO;
+    [UIView animateWithDuration:0.3 animations:^{
+        int count = _oldOffsetX/SCREEN_WIDTH;
+        NSLog(@"name = %d",count);
+        self.friendTableView.alpha = 0;
+        _searchBar.frame = CGRectMake(0, 78, SCREEN_WIDTH, 44);
+        _searchBar.showsCancelButton = NO;
+    }];
+    [_searchBar resignFirstResponder];
+    _searchBar.text = @"";
+    _isSearch = NO;
+    [_friendTableView reloadData];
 }
 //索引点击事件
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
@@ -471,9 +496,6 @@
     if (_oldOffsetX  == 0) {
         return;
     }
-    NSIndexPath * cellpath = [NSIndexPath indexPathForItem:(0) inSection:0];
-    CustomCollectionViewCell *cell  =    (CustomCollectionViewCell *) [_collectionView  cellForItemAtIndexPath:cellpath];
-    
     [_collectionView setContentOffset:CGPointMake(0, 0) animated:YES];
     [_scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
     _oldOffsetX = 0;
@@ -486,7 +508,7 @@
             //回到主线程刷新UI
             
 //            cell.dataArray = [self curPagData:cellpath.row];
-            [cell.myTableView reloadData];
+            [self.CustomCollectionViewCell1.myTableView reloadData];
             [self.activityIndicatorView stopAnimating];
             
             
@@ -501,8 +523,8 @@
     if (_oldOffsetX == SCREEN_WIDTH) {
         return;
     }
-    NSIndexPath * cellpath = [NSIndexPath indexPathForItem:(1) inSection:0];
-    CustomCollectionViewCell *cell  =    (CustomCollectionViewCell *) [_collectionView  cellForItemAtIndexPath:cellpath];
+//    NSIndexPath * cellpath = [NSIndexPath indexPathForItem:(1) inSection:0];
+//    CustomCollectionViewCell *cell  =    (CustomCollectionViewCell *) [_collectionView  cellForItemAtIndexPath:cellpath];
     [_collectionView setContentOffset:CGPointMake(SCREEN_WIDTH, 0) animated:YES];
     
     [_scrollView setContentOffset:CGPointMake(-SCREEN_WIDTH/3.0, 0) animated:YES];
@@ -516,7 +538,7 @@
             //回到主线程刷新UI
             
 //            cell.dataArray = _allArray[cellpath.row] ;
-            [cell.myTableView reloadData];
+            [self.CustomCollectionViewCell2.myTableView reloadData];
             [self.activityIndicatorView stopAnimating];
             
             
@@ -530,8 +552,8 @@
     if (_oldOffsetX == SCREEN_WIDTH*2) {
         return;
     }
-    NSIndexPath * cellpath = [NSIndexPath indexPathForItem:(2) inSection:0];
-    CustomCollectionViewCell *cell  =    (CustomCollectionViewCell *) [_collectionView  cellForItemAtIndexPath:cellpath];
+//    NSIndexPath * cellpath = [NSIndexPath indexPathForItem:(2) inSection:0];
+//    CustomCollectionViewCell *cell  =    (CustomCollectionViewCell *) [_collectionView  cellForItemAtIndexPath:cellpath];
     [_collectionView setContentOffset:CGPointMake(SCREEN_WIDTH*2, 0) animated:YES];
     [_scrollView setContentOffset:CGPointMake(-SCREEN_WIDTH*2/3.0, 0) animated:YES];
     _oldOffsetX = SCREEN_WIDTH*2;
@@ -545,7 +567,7 @@
             //回到主线程刷新UI
             
 //            cell.dataArray = _allArray[cellpath.row] ;
-            [cell.myTableView reloadData];
+            [_CustomCollectionViewCell3.myTableView reloadData];
             [self.activityIndicatorView stopAnimating];
             
             
@@ -653,5 +675,26 @@
         return filePath;
     }
     return nil;
+}
+-(CustomCollectionViewCell *)CustomCollectionViewCell1{
+    if (_CustomCollectionViewCell1 == nil) {
+        NSIndexPath * cellpath = [NSIndexPath indexPathForItem:(0) inSection:0];
+        _CustomCollectionViewCell1  =    (CustomCollectionViewCell *) [_collectionView  cellForItemAtIndexPath:cellpath];
+    }
+    return _CustomCollectionViewCell1;
+}
+-(CustomCollectionViewCell *)CustomCollectionViewCell2{
+    if (_CustomCollectionViewCell2 == nil) {
+        NSIndexPath * cellpath = [NSIndexPath indexPathForItem:(1) inSection:0];
+        _CustomCollectionViewCell2  =    (CustomCollectionViewCell *) [_collectionView  cellForItemAtIndexPath:cellpath];
+    }
+    return _CustomCollectionViewCell2;
+}
+-(CustomCollectionViewCell *)CustomCollectionViewCell3{
+    if (_CustomCollectionViewCell3 == nil) {
+        NSIndexPath * cellpath = [NSIndexPath indexPathForItem:(2) inSection:0];
+        _CustomCollectionViewCell3  =    (CustomCollectionViewCell *) [_collectionView  cellForItemAtIndexPath:cellpath];
+    }
+    return _CustomCollectionViewCell1;
 }
 @end
