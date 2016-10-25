@@ -45,7 +45,7 @@
     //给返回按钮添加点击事件
     [doBack addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:doBack];
-    self.navigationController.navigationBarHidden = YES;
+    self.navigationController.navigationBarHidden = NO;
     self.view.backgroundColor = [UIColor whiteColor];
     // 创建tableView
     [self setupFoldingTableView];
@@ -58,6 +58,10 @@
     [self.view addSubview:self.searchBar];
     self.friendTableView.alpha = 0;
     //搜索部分
+}
+#pragma mark --- 隐藏状态栏
+-(BOOL)prefersStatusBarHidden{
+    return YES;
 }
 -(void)back{
     [self.navigationController popViewControllerAnimated:YES];
