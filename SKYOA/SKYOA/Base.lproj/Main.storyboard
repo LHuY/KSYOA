@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="lup-G7-keR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="lup-G7-keR">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
-        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -20,7 +19,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ApV-s3-YKb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2633" y="181"/>
+            <point key="canvasLocation" x="-2872" y="175"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -31,39 +30,44 @@
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bluebg1" translatesAutoresizingMaskIntoConstraints="NO" id="UkM-w0-zdL">
-                                <frame key="frameInset" minX="-53" minY="-66" width="480" height="800"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <rect key="frame" x="0.0" y="0.0" width="480" height="800"/>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="loginadmin.png" translatesAutoresizingMaskIntoConstraints="NO" id="SdQ-TW-fRh">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="loginadmin" translatesAutoresizingMaskIntoConstraints="NO" id="SdQ-TW-fRh">
+                                <rect key="frame" x="64" y="231" width="287" height="45"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="287" id="IlP-42-0gV"/>
                                     <constraint firstAttribute="height" constant="45" id="uyq-W9-2ZF"/>
                                 </constraints>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="loginpwd.png" translatesAutoresizingMaskIntoConstraints="NO" id="6Lo-2u-coQ">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="loginpwd" translatesAutoresizingMaskIntoConstraints="NO" id="6Lo-2u-coQ">
+                                <rect key="frame" x="64" y="292" width="287" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="287" id="1Cq-ia-wQH"/>
                                     <constraint firstAttribute="height" constant="44" id="uvF-ts-Dp1"/>
                                 </constraints>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JoB-uf-EYa">
+                                <rect key="frame" x="64" y="344" width="287" height="31"/>
                                 <subviews>
-                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OOf-cL-y6a">
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OOf-cL-y6a">
+                                        <rect key="frame" x="24" y="2" width="42" height="28"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="28" id="d0T-Qj-NRk"/>
                                             <constraint firstAttribute="width" constant="40" id="hci-2S-FyD"/>
                                         </constraints>
                                     </switch>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="laginserver.png" translatesAutoresizingMaskIntoConstraints="NO" id="ekd-pU-xxa">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="laginserver" translatesAutoresizingMaskIntoConstraints="NO" id="ekd-pU-xxa">
+                                        <rect key="frame" x="185" y="0.0" width="102" height="31"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="31" id="EUu-81-Mp8"/>
                                         </constraints>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eIz-Mq-9To">
+                                        <rect key="frame" x="196" y="0.0" width="81" height="31"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="81" id="Agw-dO-dFF"/>
                                             <constraint firstAttribute="height" constant="31" id="s1z-M1-1kh"/>
@@ -74,6 +78,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="记住密码" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mSe-nK-dgJ">
+                                        <rect key="frame" x="80" y="7" width="62" height="18"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="62" id="hgd-yy-mad"/>
                                             <constraint firstAttribute="height" constant="18" id="kmh-XA-uaH"/>
@@ -98,8 +103,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G4B-Ae-Dfs">
+                                <rect key="frame" x="64" y="231" width="287" height="45"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eMc-RQ-YUP">
+                                        <rect key="frame" x="68" y="7" width="200" height="31"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="31" id="IGK-c5-KSQ"/>
                                             <constraint firstAttribute="width" constant="200" id="pmW-EP-pu1"/>
@@ -117,8 +124,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DMl-3L-sTN">
+                                <rect key="frame" x="64" y="292" width="287" height="45"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bAd-3s-PRA">
+                                        <rect key="frame" x="68" y="7" width="200" height="31"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="31" id="YTn-Hw-eXf"/>
                                             <constraint firstAttribute="width" constant="200" id="fra-sf-mYP"/>
@@ -137,6 +146,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cpn-QB-gb4">
+                                <rect key="frame" x="78" y="423" width="258" height="38"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="38" id="qpc-4n-pfx"/>
                                     <constraint firstAttribute="width" constant="258" id="sH1-xr-0Mr"/>
@@ -147,6 +157,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pcV-Kq-KtF" customClass="CircleView">
+                                <rect key="frame" x="142" y="96" width="130" height="130"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="130" id="ULz-iA-3Zf"/>
@@ -154,6 +165,7 @@
                                 </constraints>
                             </view>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="hclogo" translatesAutoresizingMaskIntoConstraints="NO" id="ESn-Qn-28o">
+                                <rect key="frame" x="146" y="100" width="123" height="123"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="123" id="Pic-Wu-XQI"/>
                                     <constraint firstAttribute="height" constant="123" id="ijD-5t-vw0"/>
@@ -181,6 +193,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="ggg-H1-az8"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina55"/>
                     <connections>
                         <outlet property="UserName" destination="eMc-RQ-YUP" id="ikK-RR-4Qc"/>
                         <outlet property="passWord" destination="bAd-3s-PRA" id="BOq-zG-dCS"/>
@@ -195,9 +208,9 @@
     <resources>
         <image name="bluebg1" width="480" height="800"/>
         <image name="hclogo" width="174" height="170"/>
-        <image name="laginserver.png" width="102" height="24"/>
-        <image name="loginadmin.png" width="1097" height="193"/>
+        <image name="laginserver" width="102" height="24"/>
+        <image name="loginadmin" width="1097" height="193"/>
         <image name="loginbtn" width="1093" height="195"/>
-        <image name="loginpwd.png" width="1092" height="198"/>
+        <image name="loginpwd" width="1092" height="198"/>
     </resources>
 </document>

@@ -447,7 +447,7 @@
 //收发邮件按钮滑动
 -(void)slideBnt{
     UIView * btnBgView =[[UIView alloc]initWithFrame:CGRectMake(0, 20, SCREEN_WIDTH, 60)];
-    //    btnBgView.backgroundColor = [UIColor redColor];
+//        btnBgView.backgroundColor = [UIColor redColor];
     
     [self.view addSubview:btnBgView];
     UIButton * btn1 =[[UIButton alloc]initWithFrame:CGRectMake(0, 20, SCREEN_WIDTH/3.0, 44)];
@@ -475,7 +475,7 @@
     _scrollView =[[ UIScrollView alloc]initWithFrame:CGRectMake(0, 55, SCREEN_WIDTH, 2)];
     
     //滑动线
-    UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH/3.0, 2)];
+    UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 0, btn1.frame.size.width, 2)];
         line.backgroundColor = [UIColor blueColor];
     [_scrollView addSubview:line];
     [btnBgView addSubview:_scrollView];

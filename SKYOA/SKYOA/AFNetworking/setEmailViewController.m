@@ -280,22 +280,23 @@
     CGFloat itemH = (self.nice.frame.size.height - (KNumberOfRows -1) * KMargin ) / KNumberOfRows;
     
     for (int i = 0; i < arr.count+1; i++) {
+        
         if (i<arr.count) {
-            UIGestureRecognizer * recoginzer = [[UIGestureRecognizer alloc]initWithTarget:self action:@selector(delete:)];
-            UILabel * label = [[UILabel alloc]init];
-            label.tag = 100+i;
-            [label addGestureRecognizer:recoginzer];
-            label.userInteractionEnabled = YES;
-//            UIButton * delete = [[UIButton alloc]initWithFrame:CGRectMake(itemW-20, 0, 15, 15)];
-//            [delete setImage:[UIImage imageNamed:@"hao"] forState:UIControlStateNormal];
-//            delete.tag =100+i;
-//            [delete addTarget:self action:@selector(delete:) forControlEvents:UIControlEventTouchDown];
-//            
-//            [label addSubview:delete];
             itemX = KMargin + (i % KNumberOfColumns) * (KMargin + itemW);
             itemY = KMargin + (i / KNumberOfColumns) * (KMargin + itemH) ;
+            UILabel * label = [[UILabel alloc]initWithFrame:CGRectMake(itemX, itemY, itemW, itemH)];
+            label.userInteractionEnabled = YES;
+             UITapGestureRecognizer *recoginzer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(delete1:)];
+            label.tag = 100+i;
+            [label addGestureRecognizer:recoginzer];
             
-            label.frame = CGRectMake(itemX, itemY, itemW, itemH);
+            UIButton * delete = [[UIButton alloc]initWithFrame:CGRectMake(itemW-20, 0, 15, 15)];
+            [delete setImage:[UIImage imageNamed:@"hao"] forState:UIControlStateNormal];
+            delete.tag =100+i;
+            [delete addTarget:self action:@selector(delete:) forControlEvents:UIControlEventTouchDown];
+            
+            [label addSubview:delete];
+            
             personData * model = self.arrayM[i];
             label.text = model.organName;
             [self.nice addSubview:label];
@@ -316,7 +317,14 @@
         
     }
 }
-//删除已经选择人员
+//删除已经选择人员  label 点击事件按钮
+-(void) delete1:(UITapGestureRecognizer *)recognizer{
+     UILabel *label=(UILabel*)recognizer.view;
+    //删除后要重绘九宫格
+    [self.arrayM removeObjectAtIndex:label.tag-100];
+    [self neceWitharr:self.arrayM];
+}
+//删除已经选择人员   右上角叉叉按钮
 -(void)delete:(UIButton *)btn{
     //删除后要重绘九宫格
     [self.arrayM removeObjectAtIndex:btn.tag-100];
