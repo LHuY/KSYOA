@@ -98,7 +98,7 @@
 
 - (UISearchBar *)searchBar {
     if (!_searchBar) {
-        _searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 64, kScreenWidth, 44)];
+        _searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 44, kScreenWidth, 44)];
         _searchBar.delegate = self;
         _searchBar.placeholder = @"搜索";
         _searchBar.showsCancelButton = NO;
@@ -234,17 +234,12 @@
 
 
 
-
-
-
-
-
 // 创建tableView
 - (void)setupFoldingTableView
 {
     self.automaticallyAdjustsScrollViewInsets = NO;
     
-    YUFoldingTableView *foldingTableView = [[YUFoldingTableView alloc] initWithFrame:CGRectMake(0, 105, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - 105)];
+    YUFoldingTableView *foldingTableView = [[YUFoldingTableView alloc] initWithFrame:CGRectMake(0, 88, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - 88)];
     _foldingTableView = foldingTableView;
     
     [self.view addSubview:foldingTableView];

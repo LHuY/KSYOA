@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="eOm-3d-suT">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="eOm-3d-suT">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -100,6 +100,7 @@
                     <navigationItem key="navigationItem" id="Dmh-zi-F9g"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
+                        <outlet property="caidan" destination="r5H-eY-ZrQ" id="36K-og-Vqg"/>
                         <outlet property="navBnt" destination="5eT-iy-pef" id="Fiq-z0-A6a"/>
                         <outlet property="title1" destination="8Jk-xj-kxZ" id="12f-ME-u4B"/>
                         <outlet property="webView" destination="cRK-JT-ZCx" id="pdS-5B-co7"/>

@@ -34,6 +34,8 @@
 @property (nonatomic, copy) NSString *libCachePath;
 //预览模式，第三方打开
 @property (strong, nonatomic) UIDocumentInteractionController *documentInteractionController;
+//用户菜单按钮
+@property (weak, nonatomic) IBOutlet UIButton *caidan;
 
 //用来收集webView，返回的时候，删除VIew中最上层试图
 @property (nonatomic, strong) NSMutableArray *ViewArr;
@@ -50,7 +52,9 @@
 
 - (void)viewDidLoad {
          [super viewDidLoad];
-    
+    //隐藏导航栏
+    self.navigationController.navigationBarHidden =  YES;
+    //创建webView
     self.webView1 = [[UIWebView alloc]initWithFrame:CGRectMake(0, 35, [UIScreen mainScreen].bounds.size.width , [UIScreen mainScreen].bounds.size.height-35)];
     [self.view addSubview:self.webView1];
     //把webview添加到数组中，到时候返回的时候，删除数组中最后一个，即父控件最上层Viwe
@@ -99,11 +103,14 @@
 - (IBAction)fanhui:(id)sender {
     if (self.ViewArr.count ==1) {
         //如果只有一个webVIew什么也不干；
+        
         return;
     }
     if (self.ViewArr.count == 2) {
         self.navBnt.hidden = YES;
         self.title1.hidden = NO;
+        //如果webView只有一层，则显示
+        self.caidan.hidden = NO;
     }
    UIWebView * view = self.ViewArr.lastObject;
     [view removeFromSuperview];
@@ -125,6 +132,10 @@
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
+    //判断webView是否唯一
+    if (self.ViewArr.count >1) {
+        self.caidan.hidden = YES;
+    }
     JSContext *context = [self.webView1 valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
     //定义好给js调用跳转web页面
     context[@"iosGoforward"] = ^() {
@@ -153,6 +164,8 @@
         }
     };
     context[@"iosBack"] = ^(){
+        
+
         NSArray *args = [JSContext currentArguments];
         for (int i = 0; i < args.count; ++i) {
             
@@ -170,7 +183,7 @@
                         UIView * view = self.ViewArr.lastObject;
                         [view removeFromSuperview];
                         [self.ViewArr removeLastObject];
-                    }
+                                            }
                 }
             }
             self.webView1 = self.ViewArr.lastObject;

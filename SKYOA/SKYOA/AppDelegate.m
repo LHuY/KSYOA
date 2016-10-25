@@ -16,11 +16,11 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    NSURL *cookieHost = [NSURL URLWithString:@"http://19.89.119.59:7002/oa/AppHttpService"];
-    
-    NSDictionary *propertiesDict = [NSDictionary dictionaryWithObjectsAndKeys:[cookieHost host],NSHTTPCookieDomain,[cookieHost path],NSHTTPCookiePath,@"COOKIE_NAME",NSHTTPCookieName,@"COOKIE_VALUE",NSHTTPCookieValue,nil];
-    NSHTTPCookie *cookie = [NSHTTPCookie cookieWithProperties:propertiesDict];
-    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+//    NSURL *cookieHost = [NSURL URLWithString:@"http://19.89.119.59:7002/oa/AppHttpService"];
+//    
+//    NSDictionary *propertiesDict = [NSDictionary dictionaryWithObjectsAndKeys:[cookieHost host],NSHTTPCookieDomain,[cookieHost path],NSHTTPCookiePath,@"COOKIE_NAME",NSHTTPCookieName,@"COOKIE_VALUE",NSHTTPCookieValue,nil];
+//    NSHTTPCookie *cookie = [NSHTTPCookie cookieWithProperties:propertiesDict];
+//    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
     return YES;
 }
 - (void)applicationDidBecomeActive:(UIApplication *)application {    
@@ -32,8 +32,7 @@
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {

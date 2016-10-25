@@ -33,23 +33,35 @@
 @property (nonatomic, copy) NSString *PostStr;
 @property (nonatomic, copy) NSString *filePath;
 @property (nonatomic, strong) NSMutableDictionary *dic;
-
+@property (nonatomic, strong) UINavigationController *nav;
 @end
 
 @implementation ViewController
 
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
     self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:0 green:0.2 blue:0.7 alpha:1];
         self.passWord.text = [NSString base64Decode:self.dic[@"密码"]];
         self.UserName.text = [NSString base64Decode:self.dic[@"用户名"]];
-//    self.passWord.text = self.dic[@"密码"];
-//    self.UserName.text = self.dic[@"用户名"];
     [self.passWord setSecureTextEntry:YES];
     self.navigationController.navigationBarHidden = YES;
+    [self aotoLog];
 }
-
+//自动登录功能
+-(void)aotoLog{
+    NSString * str = self.dic[@"用户名"];
+    NSString * str1 = self.dic[@"密码"];
+    if(str.length>1&&str1.length>1){
+        //登录
+        [self LogToH5:nil];
+    }
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
