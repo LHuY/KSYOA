@@ -163,18 +163,19 @@
     UIStoryboard * sb = [UIStoryboard storyboardWithName:@"returnMail" bundle:nil];
     returnMailViewController * vc = [sb instantiateInitialViewController];
     //把要编辑的数据打包好
-    
-    NSString * receiverOrganId = self.dic[@"receiverOrganId"];
-    NSString  * receiver= self.dic[@"receiver"];
-    NSArray * arrReceiverOrganId = [receiverOrganId componentsSeparatedByString:@","];
-    NSArray * arrReceiver = [receiver componentsSeparatedByString:@";"];
+    //发件人ID
+    NSString * senderOrganId = self.dic[@"senderOrganId"];
+    //获取发件人名字
+    NSString  * sender1= self.dic[@"sender"];
+    NSArray * arrSenderOrganId = [senderOrganId componentsSeparatedByString:@","];
+    NSArray * arrSender = [sender1 componentsSeparatedByString:@";"];
     
     //字典转模型
      vc.arrayM = [NSMutableArray array];
-    for (int i = 0; i < arrReceiverOrganId.count; ++i) {
+    for (int i = 0; i < arrSenderOrganId.count; ++i) {
         personData * model = [[personData alloc]init];
-        model.organId = arrReceiverOrganId[i];
-        model.organName = arrReceiver[i];
+        model.organId = arrSenderOrganId[i];
+        model.organName = arrSender[i];
         [vc.arrayM addObject:model];
     }
     vc.personData1 = self.personData1;

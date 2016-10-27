@@ -321,30 +321,36 @@
     CGFloat itemH = (self.nice.frame.size.height - (KNumberOfRows -1) * KMargin ) / KNumberOfRows;
     
     for (int i = 0; i < arr.count+1; i++) {
+        
         if (i<arr.count) {
-            UILabel * label = [[UILabel alloc]init];
+            itemX = KMargin + (i % KNumberOfColumns) * (KMargin + itemW);
+            itemY = KMargin + (i / KNumberOfColumns) * (KMargin + itemH) ;
+            UILabel * label = [[UILabel alloc]initWithFrame:CGRectMake(itemX, itemY, itemW, itemH)];
             label.userInteractionEnabled = YES;
-            UIButton * delete = [[UIButton alloc]initWithFrame:CGRectMake(itemW-15, 0, 14, 15)];
+            UITapGestureRecognizer *recoginzer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(delete1:)];
+            label.tag = 100+i;
+            [label addGestureRecognizer:recoginzer];
+            
+            UIButton * delete = [[UIButton alloc]initWithFrame:CGRectMake(itemW-20, 0, 15, 15)];
             [delete setImage:[UIImage imageNamed:@"hao"] forState:UIControlStateNormal];
             delete.tag =100+i;
             [delete addTarget:self action:@selector(delete:) forControlEvents:UIControlEventTouchDown];
-            [label addSubview:delete];
-            itemX = KMargin + (i % KNumberOfColumns) * (KMargin + itemW);
-            itemY = KMargin + (i / KNumberOfColumns) * (KMargin + itemH) ;
             
-            label.frame = CGRectMake(itemX, itemY, itemW, itemH);
+            [label addSubview:delete];
+            
             personData * model = self.arrayM[i];
             label.text = model.organName;
-            NSLog(@"sadkas   %@",model.organName);
             [self.nice addSubview:label];
         }
         
         if (arr.count<8&&i == arr.count) {
+            
+            //创建一个添加的按钮
             UIButton * bnt = [[UIButton alloc]init];
             
-            itemX = KMargin + (i % KNumberOfColumns) * (KMargin + itemW);
-            itemY = KMargin + (i / KNumberOfColumns) * (KMargin + itemH) ;
-            bnt.frame = CGRectMake(itemX+2, itemY, 25, 25);
+            itemX = KMargin+2 + (i % KNumberOfColumns) * (KMargin + itemW);
+            itemY = KMargin+2 + (i / KNumberOfColumns) * (KMargin + itemH) ;
+            bnt.frame = CGRectMake(itemX, itemY, 23, 23);
             [self.nice addSubview:bnt];
             [bnt setBackgroundImage:[UIImage imageNamed:@"and"] forState:UIControlStateNormal];
             [bnt addTarget:self action:@selector(pushPerson:) forControlEvents:UIControlEventTouchDown];
@@ -352,6 +358,14 @@
         
     }
 }
+//删除已经选择人员  label 点击事件按钮
+-(void) delete1:(UITapGestureRecognizer *)recognizer{
+    UILabel *label=(UILabel*)recognizer.view;
+    //删除后要重绘九宫格
+    [self.arrayM removeObjectAtIndex:label.tag-100];
+    [self neceWitharr:self.arrayM];
+}
+
 //删除已经选择人员
 -(void)delete:(UIButton *)btn{
     //删除后要重绘九宫格
