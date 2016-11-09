@@ -213,7 +213,7 @@
     //获取要下载的哪个附件
     NSDictionary * dic = arr[sender];
     NSString * str =  dic[@"fileUrl"];
-    NSString * postStr = [NSString stringWithFormat:@"%@%@",[path UstringWithURL:nil],str];
+    NSString * postStr = [NSString stringWithFormat:@"%@/%@",[path UstringWithURL:nil],str];
     // NSURL
     NSString * documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)lastObject];
     NSString * filePath = [NSString stringWithFormat:@"%@/oa",documentPath];

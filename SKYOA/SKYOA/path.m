@@ -16,7 +16,8 @@
     NSString * POSTstr;
     if ([arr[@"服务器"]isEqualToString:@"121.15.254.8"]) {
         //兼容ipv6
-       POSTstr = [str stringByAppendingString:@"www.huizhouhecheng.com"];
+//       POSTstr = [str stringByAppendingString:@"www.huizhouhecheng.com"];
+        POSTstr = [str stringByAppendingString:arr[@"服务器"]];
     }else {
         POSTstr = [str stringByAppendingString:arr[@"服务器"]];
     }

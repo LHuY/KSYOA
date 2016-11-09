@@ -74,7 +74,11 @@
     
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
-
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    [self.textFile1 resignFirstResponder];
+    [self.textFile2 resignFirstResponder];
+    [self.textFile3 resignFirstResponder];
+}
 
 #pragma mark --- textFile
 - (void)textFieldDidEndEditing:(UITextField *)textField{
