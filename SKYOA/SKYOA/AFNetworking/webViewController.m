@@ -53,9 +53,12 @@
 - (void)viewDidLoad {
          [super viewDidLoad];
     //隐藏导航栏
+    
     self.navigationController.navigationBarHidden =  YES;
     //创建webView
     self.webView1 = [[UIWebView alloc]initWithFrame:CGRectMake(0, 35, [UIScreen mainScreen].bounds.size.width , [UIScreen mainScreen].bounds.size.height-35)];
+    //静止webView下拉滑动
+    self.webView1.scrollView.bounces = NO;
     [self.view addSubview:self.webView1];
     //把webview添加到数组中，到时候返回的时候，删除数组中最后一个，即父控件最上层Viwe
     [self.ViewArr addObject:self.webView1];
@@ -142,6 +145,8 @@
         NSArray *args = [JSContext currentArguments];
         for (JSValue *jsVal in args) {
             self.webView1 = [[UIWebView alloc]initWithFrame:CGRectMake(0, 35, [UIScreen mainScreen].bounds.size.width , [UIScreen mainScreen].bounds.size.height-35)];
+            //静止下拉效果
+            self.webView1.scrollView.bounces = NO;
             [self.view addSubview:self.webView1];
             self.webView1.delegate = self;
             [self.ViewArr addObject:self.webView1];
@@ -259,6 +264,7 @@
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
     UIAlertView *alter = [[UIAlertView alloc] initWithTitle:@"" message:@"网页加载失败！" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alter show];
+    
     if ([error code] == NSURLErrorCancelled) {
         
         return;
@@ -331,33 +337,6 @@
     [self.webView1 loadRequest:request];
 }
 
-#pragma mark---NSURLConnectionDataDelegate
-// 下载出错
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    NSLog(@"下载出错");
-}
-
-// 接收到数据
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-    [self.data appendData:data];
-    self.currentLength += data.length;
-    
-    CGFloat progre = (float)self.currentLength / self.length;
-    NSLog(@"下载进度%f",progre);
-}
-
-// 接收到响应
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    NSLog(@"start %@",response);
-    NSHTTPURLResponse *httpRespon = (NSHTTPURLResponse *)response;
-    self.length = (int)httpRespon.expectedContentLength;
-}
-
-// 下载完成didFinish（）
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    [self CallJsShow:@"didFinish"];
-    [self.data writeToFile:self.libCachePath atomically:YES];
-}
 #pragma mark----懒加载
 -(NSMutableArray *)URLArr{
     if (_URLArr == nil) {

@@ -92,8 +92,8 @@
                     NSString * str = @"http://";
                     if ([arr[@"服务器"]isEqualToString:@"121.15.254.8"]) {
                         //兼容ipv6
-//                        NSString * POSTstr = [str stringByAppendingString:@"www.huizhouhecheng.com"];
-                        NSString * POSTstr = [str stringByAppendingString:arr[@"服务器"]];
+                        NSString * POSTstr = [str stringByAppendingString:@"www.huizhouhecheng.com"];
+//                        NSString * POSTstr = [str stringByAppendingString:arr[@"服务器"]];
                         self.PostStr = POSTstr;
                     }else{
                         NSString * POSTstr = [str stringByAppendingString:arr[@"服务器"]];
@@ -135,7 +135,7 @@
                         [MBProgressHUD showSuccess:result[@"msg"]];
                         //跳转成功之后先判断是否要记住密码
                         if (!self.switch1.isOn) {
-                            
+                            self.dic = nil;
                             [self.dic setValue:[NSString base64Encode:self.UserName.text] forKey:@"用户名"];
                             [self.dic setValue:[NSString base64Encode:self.passWord.text] forKey:@"密码"];
 //                            [self.dic setValue:self.UserName.text forKey:@"用户名"];
@@ -146,8 +146,9 @@
                         webViewController * vc = [sb instantiateInitialViewController];
                         [self.navigationController pushViewController:vc animated:YES];
                     } failure:^(NSError *error) {
-                                [MBProgressHUD showMessage:@"设置服务器填写有误"];
-                        [self performSelector:@selector(MBProgressHUDHidn) withObject:nil afterDelay:2];
+                                [MBProgressHUD showError:@"设置服务器填写有误"];
+                        [MBProgressHUD load];
+                        
                     }];
                     
 //@"http://19.89.119.59:7002/oa/AppLogin_outService?method=Login&loginUserId=llw&loginPassword=123&lmei="

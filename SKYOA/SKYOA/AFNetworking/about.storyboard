@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="gtB-pD-4Tr">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="gtB-pD-4Tr">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -30,22 +30,6 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="503-LI-TV7">
-                                <rect key="frame" x="0.0" y="515" width="375" height="152"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ekR-9X-Jnq">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                                        <state key="normal" title="联系我们" backgroundImage="login_button_register_normal"/>
-                                        <connections>
-                                            <action selector="lianxi:" destination="gtB-pD-4Tr" eventType="touchUpInside" id="nfl-yl-Dlo"/>
-                                        </connections>
-                                    </button>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="CellArrow" translatesAutoresizingMaskIntoConstraints="NO" id="vFK-bD-uBz">
-                                        <rect key="frame" x="344" y="5" width="17" height="33"/>
-                                    </imageView>
-                                </subviews>
-                                <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
-                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tJM-Ad-LVb">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="56"/>
                                 <subviews>
@@ -58,7 +42,7 @@
                                                     <constraint firstAttribute="width" constant="13" id="tIh-2K-HWB"/>
                                                 </constraints>
                                             </imageView>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qgb-aP-Ker">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qgb-aP-Ker" userLabel="主页">
                                                 <rect key="frame" x="0.0" y="0.0" width="56" height="28"/>
                                                 <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 <fontDescription key="fontDescription" type="italicSystem" pointSize="17"/>
@@ -103,12 +87,45 @@
                                     <constraint firstItem="AUC-1Y-5Lv" firstAttribute="centerY" secondItem="tJM-Ad-LVb" secondAttribute="centerY" id="nNn-dg-kQL"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="503-LI-TV7">
+                                <rect key="frame" x="0.0" y="515" width="375" height="152"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ekR-9X-Jnq">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="gug-xg-ctV"/>
+                                        </constraints>
+                                        <state key="normal" title="联系我们" backgroundImage="login_button_register_normal"/>
+                                        <connections>
+                                            <action selector="lianxi:" destination="gtB-pD-4Tr" eventType="touchUpInside" id="nfl-yl-Dlo"/>
+                                        </connections>
+                                    </button>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="CellArrow" translatesAutoresizingMaskIntoConstraints="NO" id="vFK-bD-uBz">
+                                        <rect key="frame" x="353" y="5" width="8" height="33"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="33" id="2Qx-M9-hUi"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="vFK-bD-uBz" firstAttribute="top" secondItem="503-LI-TV7" secondAttribute="top" constant="5" id="383-vb-wcg"/>
+                                    <constraint firstAttribute="trailing" secondItem="ekR-9X-Jnq" secondAttribute="trailing" id="NHc-MN-1am"/>
+                                    <constraint firstItem="ekR-9X-Jnq" firstAttribute="top" secondItem="503-LI-TV7" secondAttribute="top" id="QpD-eM-3Bh"/>
+                                    <constraint firstAttribute="height" constant="152" id="YOJ-sR-UlS"/>
+                                    <constraint firstItem="ekR-9X-Jnq" firstAttribute="leading" secondItem="503-LI-TV7" secondAttribute="leading" id="bZB-aM-aG9"/>
+                                    <constraint firstAttribute="trailing" secondItem="vFK-bD-uBz" secondAttribute="trailing" constant="14" id="cd2-zm-n0D"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="tJM-Ad-LVb" firstAttribute="leading" secondItem="oLE-Gp-uHN" secondAttribute="leading" id="I6l-Cv-WR7"/>
+                            <constraint firstItem="503-LI-TV7" firstAttribute="leading" secondItem="oLE-Gp-uHN" secondAttribute="leading" id="MOz-4D-ROf"/>
                             <constraint firstItem="awE-5e-5dD" firstAttribute="top" secondItem="f1F-vh-w51" secondAttribute="bottom" constant="76" id="OJ6-JJ-nF4"/>
+                            <constraint firstAttribute="trailing" secondItem="503-LI-TV7" secondAttribute="trailing" id="cp8-04-RcX"/>
                             <constraint firstItem="Ih0-tU-5UC" firstAttribute="top" secondItem="awE-5e-5dD" secondAttribute="bottom" constant="1" id="duP-4i-Kba"/>
+                            <constraint firstItem="eDN-qV-dwR" firstAttribute="top" secondItem="503-LI-TV7" secondAttribute="bottom" id="eR1-yD-Zoj"/>
                             <constraint firstItem="awE-5e-5dD" firstAttribute="centerX" secondItem="oLE-Gp-uHN" secondAttribute="centerX" id="pVX-yH-G7q"/>
                             <constraint firstAttribute="trailing" secondItem="tJM-Ad-LVb" secondAttribute="trailing" id="uS2-qB-jvS"/>
                             <constraint firstItem="tJM-Ad-LVb" firstAttribute="top" secondItem="oLE-Gp-uHN" secondAttribute="top" id="wiR-Hc-Szp"/>
@@ -129,7 +146,7 @@
     <resources>
         <image name="4A8345AF-DF92-4B24-BC3F-8BF83A315564" width="17" height="30"/>
         <image name="CellArrow" width="8" height="12"/>
-        <image name="hclogo" width="174" height="170"/>
+        <image name="hclogo" width="60" height="60"/>
         <image name="login_button_register_normal" width="275" height="38"/>
     </resources>
 </document>

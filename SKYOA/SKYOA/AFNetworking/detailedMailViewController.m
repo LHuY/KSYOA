@@ -148,7 +148,8 @@
 -(void)SetSCrollView{
     self.navigationController.navigationBarHidden = NO;
     // 一定要设置contentSize属性，否则无法进行滚动
-    self.scrollView.contentSize=CGSizeMake(0, 740);
+    CGRect rect = [[UIScreen mainScreen] bounds];
+    self.scrollView.contentSize=CGSizeMake(0,rect.size.height);
     //去除滚动条
     self.scrollView.showsVerticalScrollIndicator=NO;
     //设置默认情况下的内间距

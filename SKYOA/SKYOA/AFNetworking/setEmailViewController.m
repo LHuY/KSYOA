@@ -14,12 +14,14 @@
 #import "selectManViewController.h"
 #import "MBProgressHUD+PKX.h"
 #import "UIButton+baritembtn.h"
+#import "AFNetworking.h"
 
 //#define KNumCount 8   // 九宫格总个数
 #define KMargin 0   // 间距
 #define KNumberOfColumns 4   // 列数
 #define KNumberOfRows 2  // 行数
 #define KStatusBarHeight 20  // 状态栏高度
+#define CZBoundary @"luoyun"
 
 @interface setEmailViewController ()<UIPickerViewDataSource,UIPickerViewDelegate>
 @property (weak, nonatomic) IBOutlet UIView *nice;
@@ -46,6 +48,8 @@
 @property (nonatomic, strong) NSMutableArray *didSelectArr;
 //已经选好的文件字符串名字
 @property (nonatomic, copy) NSString *name;
+//产品路径
+@property (nonatomic, copy) NSString *filePath;
 //判断是否滑动了picker
 @property (nonatomic, assign) BOOL isPicker;
 @end
@@ -154,6 +158,7 @@
         
         NSString * documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)lastObject];
         NSString * filePath = [NSString stringWithFormat:@"%@/oa",documentPath];
+        self.filePath = filePath;
         NSError * error =[[NSError alloc]init];
         NSArray * array = [[NSArray alloc]initWithArray:[[NSFileManager defaultManager]contentsOfDirectoryAtPath:filePath error:&error]];
         //获取站内的文件夹
@@ -360,7 +365,37 @@
     [self.textFile1 resignFirstResponder];
     [self.textFile2 resignFirstResponder];
     [self.textView resignFirstResponder];
+    
+    // NSURL
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/AppUploadService?biz=webmailattachment&processid=%@&encryption=&bizclass=&creatorid=",[path UstringWithURL:nil],[[self uuidString] stringByReplacingOccurrencesOfString:@"-" withString:@""]]];
+    
+    // NSURLRequest
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    // 设置HTTTP的方法(POST)
+    [request setHTTPMethod:@"POST"];
+    
+    // 告诉服务器我是上传二进制数据
+    [request setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@",CZBoundary] forHTTPHeaderField:@"Content-Type"];
+    
+    // 文件数据
+    // 文件路径
+    NSString *fileName = @"1.jpg" ;
+    NSString *path =  [[NSBundle mainBundle]pathForResource:@"1.jpg" ofType:nil];
+//    [NSString stringWithFormat:@"%@/%@",self.filePath,self.attachmentArr.firstObject];
+    // 读取文件数据
+    NSData *fileData = [NSData dataWithContentsOfFile:path];
+    // 设置请求体
+    request.HTTPBody = [self dataWithFileData:fileData fieldName:@"Filedata" fileName:fileName];
+    
+    // NSURLConnection
+    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
+        NSLog(@"！！！！！！%@",data);
+        id result = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+        NSLog(@"！！！！！！%@",result);
+    }];
+
 }
+//
 //文件发送
 - (void)send {
     
@@ -469,7 +504,6 @@
         //        NSArray * arr = [data dataWithDic:result[@"data"]];
         //        data * data1 = arr.lastObject;
         
-        NSLog(@"成功：!~~~~~%@",result);
         if (self.blockName) {
             self.blockName(@"2");
         }
@@ -481,7 +515,40 @@
     //跳转返回当前页面
 //    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
-
+/**
+ 返回上传需要的二进制数据
+ 1. 文件的数据
+ 2. 后台给的字段名
+ 3. 上传的文件名
+ */
+- (NSData *)dataWithFileData:(NSData *)fileData fieldName:(NSString *)fieldName fileName:(NSString *)fileName {
+    // 可变的二进制数据
+    NSMutableData *dataM = [NSMutableData data];
+    // 可变字符串用来拼接数据
+    NSMutableString *strM = [NSMutableString stringWithFormat:@"--%@\r\n",CZBoundary];
+    
+    [strM appendFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\" \r\n",fieldName,fileName];
+    
+    // application/octet-stream 代表上传所有的二进制格式都支持
+    [strM appendString:@"Content-Type: application/octet-stream \r\n\r\n"];
+    
+        NSLog(@"%@",strM);
+    // 把前面一部份数据先拼接
+    [dataM appendData:[strM dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    // 拼接文件的二进制数据
+    [dataM appendData:fileData];
+    
+    // 清空可变字符串之后，再设置内容为\r\n
+    [strM setString:@"\r\n"];
+    
+    [strM appendFormat:@"--%@--",CZBoundary];
+    
+    // 把最后一部份加到二进制数据中
+    [dataM appendData:[strM dataUsingEncoding:NSUTF8StringEncoding]];
+        NSLog(@"%@",strM);
+    return dataM.copy;
+}
 
 -(NSString *)getCurTime{
     NSDate * data = [NSDate date];
