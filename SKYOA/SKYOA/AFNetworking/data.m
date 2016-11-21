@@ -25,6 +25,7 @@
     for (NSDictionary *dict in arr) {
         [heros addObject:[data heroWithDict:dict]];
     }
+
     return heros;
 }
 -(void)setValue:(id)value forUndefinedKey:(NSString *)key{

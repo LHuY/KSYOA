@@ -42,6 +42,11 @@
     [super viewWillAppear:animated];
     
 }
+- (IBAction)text:(id)sender {
+    UIStoryboard  * SB = [UIStoryboard storyboardWithName:@"detailedMail" bundle:nil];
+    detailedMailViewController * VC = [SB  instantiateInitialViewController];
+    [self.navigationController pushViewController:VC animated:YES];
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     

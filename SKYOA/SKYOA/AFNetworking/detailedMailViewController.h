@@ -23,4 +23,7 @@
 @property (nonatomic, copy) void (^blockName)(NSString * count);
 //全部人员选择  数组
 @property (nonatomic, strong)  NSMutableArray *personData1;
+
+//要具体显示的数据模型
+@property (nonatomic, strong)  NSArray *dataSoureArr;
 @end

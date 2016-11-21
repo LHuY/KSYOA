@@ -14,8 +14,10 @@
 #import "returnMailViewController.h"
 #import "UIButton+baritembtn.h"
 #import "MBProgressHUD+PKX.h"
+#import "TextViewTableViewCell.h"
 
-@interface detailedMailViewController ()<NSURLConnectionDataDelegate,UIDocumentInteractionControllerDelegate>
+static NSString *cellID=@"cellID";
+@interface detailedMailViewController ()<NSURLConnectionDataDelegate,UIDocumentInteractionControllerDelegate,UITableViewDelegate,UITableViewDataSource>
 //回复
 @property (weak, nonatomic) IBOutlet UIButton *call;
 //转发
@@ -47,6 +49,11 @@
 
 @property (strong, nonatomic) UIDocumentInteractionController *documentInteractionController;
 @property (nonatomic, copy) NSString *filePath;
+
+
+//字符串识别，添加tabel
+@property (nonatomic,strong)UITableView *textTableView;
+@property(nonatomic,strong)UITextView *textView1;
 @end
 @implementation detailedMailViewController
 
@@ -55,6 +62,9 @@
 //}
 - (void)viewDidLoad {
     [super viewDidLoad];
+    //注册cell
+    [self.textTableView registerClass:[TextViewTableViewCell class] forCellReuseIdentifier:cellID];
+    
     if ([self.num isEqualToString:@"1"]) {
         self.call.hidden = YES;
         self.zhuanfa.hidden = YES;
@@ -181,14 +191,16 @@
     }
     vc.personData1 = self.personData1;
     //设置回复前的内容信息
-    NSString * line = @"H~~~~~~~原始邮件~~~~~~~H\n";
-    NSString * sendMan = [NSString stringWithFormat:@"  发件人:  %@\n\n",self.dic[@"sender"]];
+    NSString * line = @"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+    NSString * sendMan = [NSString stringWithFormat:@"  发件人:  %@\n",self.dic[@"sender"]];
     //发件时间
-    NSString * time = [NSString stringWithFormat:@"  发件时间:  %@\n\n",self.model.SEND_TIME];
+    NSString * time = [NSString stringWithFormat:@"  发件时间:  %@\n",self.model.SEND_TIME];
+    
     //主题
-    NSString * title = [NSString stringWithFormat:@"  主题:回复：%@\n\n",self.dic[@"subject"]];
+    NSString * title = [NSString stringWithFormat:@"  主题:回复：%@\n",self.dic[@"subject"]];
+   NSString * line1 = @"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
     NSString  * content = self.textView.text;
-    NSString * togetter = [NSString stringWithFormat:@"%@%@%@%@%@",line,sendMan,time,title,content];
+    NSString * togetter = [NSString stringWithFormat:@"%@%@%@%@%@%@",line,sendMan,time,title,line1,content];
     //标题和内容打包
     NSArray * relay = @[self.titleLabel.text,togetter];
     vc.relay = relay;
@@ -273,4 +285,92 @@
     NSLog(@"%@",array);
     
 }
+
+
+
+//集成进来
+//-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+//{
+//    
+//    return self.dataSoureArr.count;
+//}
+//
+//-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    TextViewTableViewCell *cell =[tableView dequeueReusableCellWithIdentifier:cellID forIndexPath:indexPath];
+//    cell.dataDic = _dataSoureArr[indexPath.row];
+//    
+//    
+//    return cell;
+//}
+//
+//-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    UITextView *textView = [[UITextView alloc]initWithFrame:CGRectZero];
+//    NSString *nickName = _dataSoureArr[indexPath.row][@"nickName"];
+//    NSString *contentStr = _dataSoureArr[indexPath.row][@"content"];
+//    NSString *timeStr = _dataSoureArr[indexPath.row][@"time"];
+//    
+//    NSString *allContentStr = [NSString stringWithFormat: @"%@: %@ %@",nickName,contentStr,timeStr];
+//    textView.attributedText = [self setLabelTextColor:allContentStr nick:nickName time:timeStr];
+//    [textView sizeToFit];
+//    
+//    //textView的高度
+//    float textViewHeight = [self heightForString:textView andWidth:self.view.bounds.size.width -20];
+//    
+//    
+//    //让cell的高度 等于textView的高度
+//    return textViewHeight;
+//    
+//}
+//
+//
+//- (float) heightForString:(UITextView *)textView andWidth:(float)width{
+//    CGSize sizeToFit = [textView sizeThatFits:CGSizeMake(width, MAXFLOAT)];
+//    return sizeToFit.height;
+//}
+//
+//
+////这里主要是获取字符串大小  配合上面的方法准确计算出textView的高度 来动态设置cell的高度
+//- (NSMutableAttributedString *)setLabelTextColor:(NSString *)string nick:(NSString *)nickName time:(NSString *)time
+//{
+//    NSMutableAttributedString *attributedStr = [[NSMutableAttributedString alloc] initWithString:string];
+//    
+//    NSRange range = [string rangeOfString:nickName];
+//    [attributedStr addAttributes:@{NSForegroundColorAttributeName:[UIColor blueColor],NSFontAttributeName:[UIFont systemFontOfSize:18]} range:NSMakeRange(0, range.length )];
+//    NSRange range1 = [string rangeOfString:time];
+//    [attributedStr addAttributes:@{NSForegroundColorAttributeName:[UIColor grayColor],NSFontAttributeName:[UIFont systemFontOfSize:12]} range:NSMakeRange(range1.location,range1.length)];
+//    
+//    [attributedStr addAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:16]} range:NSMakeRange(range.location+range.length,string.length-range1.length-range.length)];
+//    
+//    return attributedStr;
+//}
+//-(NSArray *)dataSoureArr{
+//    if (_dataSoureArr == nil) {
+//         _dataSoureArr = [[NSArray alloc] init];
+//        _dataSoureArr = @[
+//                    @{@"content":@"18824286088",@"time":@"2016-5-13",@"nickName":@"风中的草"},
+//                          @{@"content":@"测试策划侧反馈食风坡附近破冰我偶尔偶尔玩vmfew复刻品咖啡",@"time":@"2014-12-13",@"nickName":@"hahaha"},
+//                          @{@"content":@"测试策划侧反馈食风坡 vmfew复刻品咖啡配咖啡分 www.baidu.com 开拍咖算分为破发金额为平均分破而价格破耳机公婆而价格破耳机股票而价格破而价格破耳机公婆二极管 ",@"time":@"2014-12-13",@"nickName":@"苦逼的码农啊"},
+//                          @{@"content":@"测试策划侧反馈食风坡vmfew复刻品咖啡配咖啡分开拍咖算 0755-86302744 分为破发金额为平均分破而价格破耳机公婆而价格破耳机股票而价格破而价格破耳机公婆二极管 ",@"time":@"2014-12-13",@"nickName":@"有用给个评论支持下"},
+//                          @{@"content":@"测试策划侧反馈食风坡 的反馈配额外房客网客服 876333335@qq.com 品味咖啡配网客服皮肤科访客无法看房客网可分为罚款未开发未付款为破耳机公婆而价格破耳机股票而价格破而价格破耳机公婆二极管 ",@"time":@"2014-12-13",@"nickName":@"共同进步"}
+//                          ];
+//    }
+//    return _dataSoureArr;
+//}
+//-(UITableView *)textTableView
+//{
+//    if (!_textTableView) {
+//        _textTableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+//        _textTableView.delegate = self;
+//        _textTableView.dataSource =self;
+//        _textTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];//去掉多余的分割线
+//        [self.view addSubview:_textTableView];
+//    }
+//    
+//    return _textTableView;
+//    
+//}
+
+
 @end

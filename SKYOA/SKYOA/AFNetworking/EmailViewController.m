@@ -169,7 +169,7 @@
     });
 
 }
-//草稿箱的请求
+//收件箱的请求
 -(void)QueryinBoxList{
     //收件箱
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
@@ -184,6 +184,7 @@
                 }
 
                 _arrIn = [data dataWithDic:result[@"data"]];
+                
                 //搜索部分数据
                 self.searchArrIn = [searchData searchWithArray:result[@"data"]];
                 [_allDic setObject:_arrIn forKey:@"收件箱"];
@@ -209,7 +210,7 @@
             }
 
             dispatch_async(dispatch_get_main_queue(), ^{
-                _arrDraft = [data dataWithDic:result[@"result"]];
+                _arrDraft = [data dataWithDic:result[@"data"]];
                 //搜索部分数据
                 self.searchArrDraft = [searchData searchWithArray:result[@"result"]];
                 
@@ -619,6 +620,7 @@
         cell.nav = self.navigationController;
     }
     if (indexPath.row == 2) {
+        NSLog(@"!!%@",_allDic[@"草稿箱"]);
         cell.dataArray = _allDic[@"草稿箱"];
         cell.nav = self.navigationController;
     }
