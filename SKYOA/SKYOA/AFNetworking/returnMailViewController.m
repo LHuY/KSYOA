@@ -146,12 +146,14 @@
     }else{
         //说明点击了删除键
         [self.didSelectArr removeObjectAtIndex:btn.tag-2001];
+        
         //view子试图全部清掉
         for (UIView * view in self.attachmenView.subviews) {
             [view removeFromSuperview];
         }
         //重新绘制附件
         [self fujian:self.didSelectArr];
+        //用来删除已经上传的图片
     }
     
 }

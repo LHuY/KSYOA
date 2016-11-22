@@ -15,6 +15,7 @@
 #import "UIButton+baritembtn.h"
 #import "MBProgressHUD+PKX.h"
 #import "TextViewTableViewCell.h"
+#import "download.h"
 
 static NSString *cellID=@"cellID";
 @interface detailedMailViewController ()<NSURLConnectionDataDelegate,UIDocumentInteractionControllerDelegate,UITableViewDelegate,UITableViewDataSource>
@@ -92,7 +93,7 @@ static NSString *cellID=@"cellID";
 //请求要显示详细信息数据
 -(void)showDataMail_ID:(NSString *)mail_ID{
     
-    NSString * postStr = [NSString stringWithFormat:@"%@/AppHttpService?method=GetEmail&emailId=%@",[path UstringWithURL:nil],mail_ID];
+    NSString * postStr = [NSString stringWithFormat:@"%@/AppHttpService?method=GetEmailHtml&emailId=%@",[path UstringWithURL:nil],mail_ID];
     [[KYNetManager sharedNetManager]POST:postStr parameters:nil success:^(id result) {
         BOOL status = [[result objectForKey:@"status"] boolValue];
         if (!status) {
@@ -137,7 +138,11 @@ static NSString *cellID=@"cellID";
         self.mail_Name_send.text = dic[@"sender"];
         self.mail_Name.text = dic[@"receiver"];
         self.titleLabel.text = dic[@"subject"];
-        self.textView.text = dic[@"content"];
+        NSLog(@"%@",dic[@"content"]);
+        NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[dic[@"content"] dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
+//         NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[dic[@"subject"]dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
+        self.textView.attributedText  = attributedString;
+//        self.textView.text = dic[@"content"];
     } failure:^(NSError *error) {
         NSLog(@"失败%@",error);
     }];
@@ -226,34 +231,10 @@ static NSString *cellID=@"cellID";
     //获取要下载的哪个附件
     NSDictionary * dic = arr[sender];
     NSString * str =  dic[@"fileUrl"];
-    NSString * postStr = [NSString stringWithFormat:@"%@/%@",[path UstringWithURL:nil],str];
-    // NSURL
-    NSString * documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)lastObject];
-    NSString * filePath = [NSString stringWithFormat:@"%@/oa",documentPath];
-    //拼接要下载在那个地方的路径
-    if (![[NSFileManager defaultManager]fileExistsAtPath:filePath]) {
-        
-        [[NSFileManager defaultManager] createDirectoryAtPath:filePath withIntermediateDirectories:YES attributes:nil error:nil];
-        
-    }else{
-        NSLog(@"有这个文件了");
-    }
-     filePath = [NSString stringWithFormat:@"%@/%@",filePath,dic[@"fileName"]];
-    self.filePath = filePath;
-    NSString *URLStr = postStr;
-    _task = [LXNetworking downloadWithUrl:URLStr saveToPath:filePath progress:^(int64_t bytesProgress, int64_t totalBytesProgress) {
-        //封装方法里已经回到主线程，所有这里不用再调主线程了
-//        _progressLab.text=[NSString stringWithFormat:@"进度==%.2f",1.0 * bytesProgress/totalBytesProgress];
-        
-    } success:^(id response) {
-        //下载成功了，进行预览
+    [[download new]downloadWithURl:str fileName:dic[@"fileName"] success:^(id result) {
+        //成功之后，预览文件
         [self lookFile:dic[@"fileName"]];
-        
-
-//        _progressLab.text=@"下载完成";
-    } failure:^(NSError *error) {
-        
-    } showHUD:NO];
+    }];
     
 }
     //预览

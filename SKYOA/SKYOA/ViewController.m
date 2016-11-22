@@ -151,7 +151,7 @@
                         webViewController * vc = [sb instantiateInitialViewController];
                         [self.navigationController pushViewController:vc animated:YES];
                     } failure:^(NSError *error) {
-                                [MBProgressHUD showError:@"设置服务器填写有误"];
+                                [MBProgressHUD showError:@"连接不到服务器"];
                         [MBProgressHUD load];
                         
                     }];

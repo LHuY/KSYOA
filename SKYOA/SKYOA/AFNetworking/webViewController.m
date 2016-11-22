@@ -16,8 +16,10 @@
 #import "MBProgressHUD+PKX.h"
 #import "IPViewController.h"
 #import "changePasswordViewController.h"
+#import "download.h"
+#import "LXNetworking.h"
 
-@interface webViewController ()<UIWebViewDelegate,NSURLConnectionDataDelegate,UIDocumentInteractionControllerDelegate>
+@interface webViewController ()<NSURLConnectionDataDelegate,UIWebViewDelegate,UIDocumentInteractionControllerDelegate,UIDocumentInteractionControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
 @property (nonatomic, strong) UIWebView *webView1;
 @property (nonatomic, assign) BOOL count;
@@ -41,6 +43,10 @@
 @property (nonatomic, strong) NSMutableArray *ViewArr;
 //用来收集跳转到页面的URL
 @property (nonatomic, strong) NSMutableArray *URLArr;
+
+@property (nonatomic,strong)LXURLSessionTask *task;
+//文件路径
+@property (nonatomic, copy) NSString *Path;
 @end
 
 @implementation webViewController
@@ -75,7 +81,6 @@
             
         }
     } failure:^(NSError *error) {
-        [MBProgressHUD showError:@"服务器连接错误"];
     }];
     //添加webView后缀
     [self.URLArr addObject:@"/jsp/app/index.html"];
@@ -124,16 +129,27 @@
     self.webView1 = self.ViewArr.lastObject;
 }
 
-#pragma mark Document Interaction Controller Delegate Methods
-- (UIViewController *) documentInteractionControllerViewControllerForPreview: (UIDocumentInteractionController *) controller {
-    return self;
-}
+
 #pragma mark--UIWebview-代理
 - (void)webViewDidStartLoad:(UIWebView *)webView{
    
     
 }
-
+- (IBAction)lookFile:(NSString *)fileName {
+    NSFileManager *manager = [NSFileManager defaultManager];
+    NSURL *url = [[manager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] firstObject];
+    NSURL *pathURL = [url URLByAppendingPathComponent:[NSString stringWithFormat:@"oa/%@",fileName]];
+    
+    if (pathURL) {
+        // Initialize Document Interaction Controller
+        self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:pathURL];
+        
+        // Configure Document Interaction Controller
+        [self.documentInteractionController setDelegate:self];
+        // Preview PDF
+        [self.documentInteractionController presentPreviewAnimated:YES];
+    }
+}
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
     //判断webView是否唯一
     if (self.ViewArr.count >1) {
@@ -168,6 +184,14 @@
             [alter show];
         }
     };
+   
+    context[@"iosDownload"] = ^(){
+        NSArray *args = [JSContext currentArguments];
+        [[download new] downloadWithURl:args.firstObject fileName:args.lastObject success:^(id result) {
+            [self lookFile:args.lastObject];
+        }];
+    };
+    //返回 时候调用
     context[@"iosBack"] = ^(){
         
 
@@ -261,6 +285,10 @@
         
     }
 }
+
+
+
+
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
     UIAlertView *alter = [[UIAlertView alloc] initWithTitle:@"" message:@"网页加载失败！" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alter show];
@@ -336,7 +364,21 @@
     NSURLRequest * request = [NSURLRequest requestWithURL:url];
     [self.webView1 loadRequest:request];
 }
+#pragma mark Document Interaction Controller Delegate Methods
 
+- (UIViewController *) documentInteractionControllerViewControllerForPreview: (UIDocumentInteractionController *) controller {
+    return self;
+}
+
+- (void)documentInteractionControllerDidEndPreview:(UIDocumentInteractionController *)controller{
+    //看完文件之后，把之前浏览的给删除掉
+    NSError * error = [[NSError alloc]init];
+    //    [[NSFileManager defaultManager]removeItemAtPath:self.filePath error:&error];
+    //显示已经下载好的文件，简称站内文件
+    NSArray * array = [[NSArray alloc]initWithArray:[[NSFileManager defaultManager]contentsOfDirectoryAtPath:[self.Path stringByDeletingLastPathComponent] error:&error]];
+    NSLog(@"%@",array);
+    
+}
 #pragma mark----懒加载
 -(NSMutableArray *)URLArr{
     if (_URLArr == nil) {

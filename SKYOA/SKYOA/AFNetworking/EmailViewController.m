@@ -151,7 +151,6 @@
             BOOL status = [[result objectForKey:@"status"] boolValue];
             if (!status) {
                 //说明请求错误；
-                [MBProgressHUD showError:@"服务器连接失败"];
                 return ;
             }
 
@@ -179,7 +178,8 @@
                 BOOL status = [[result objectForKey:@"status"] boolValue];
                 if (!status) {
                     //说明请求错误；
-                    [MBProgressHUD showError:@"服务器连接失败"];
+
+                    
                     return ;
                 }
 
@@ -205,7 +205,8 @@
             BOOL status = [[result objectForKey:@"status"] boolValue];
             if (!status) {
                 //说明请求错误；
-                [MBProgressHUD showError:@"服务器连接失败"];
+
+                
                 return ;
             }
 

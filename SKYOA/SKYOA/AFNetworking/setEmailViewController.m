@@ -55,6 +55,8 @@
 @property (nonatomic, assign) BOOL isPicker;
 //记录当前发送邮件时候的UUID，以便上传文件。
 @property (nonatomic, copy) NSString *UUID;
+//用来记录已经上传了文件的UUID
+@property (nonatomic, strong) NSMutableArray *UUIDArr;
 //拼接的字符串
 @property (nonatomic, copy) NSString *str;
 @end
@@ -156,6 +158,13 @@
         [self.attachmentBtn setTitle:@"添加附件" forState:UIControlStateNormal];
         [self.pickerVIew removeFromSuperview];
         [self fujian:self.didSelectArr];
+        
+
+        [MBProgressHUD showMessage:@"上传中。。。"];
+        
+            [self sendAttachmentFileName:self.name filepath:[NSString stringWithFormat:@"%@/%@",self.filePath,self.name]];
+        
+
     }else{
         self.isTunch = YES;
         self.name =nil;
@@ -214,6 +223,17 @@
     }else{
         //说明点击了删除键
                 [self.didSelectArr removeObjectAtIndex:btn.tag-2001];
+        //已经上传的文件要删除掉，
+//        NSLog(@"点击了%ld~~~~%@",btn.tag-2001,self.UUIDArr1);
+        NSString  * str = [NSString stringWithFormat:@"%@/AppHttpService?method=DelAtt&attId=%@",[path UstringWithURL:nil],self.UUIDArr[btn.tag-2001]];
+        [[KYNetManager sharedNetManager]POST:str parameters:nil success:^(id result) {
+            //删除成功之后，删除self.UUIDArr对应的UUID
+            [MBProgressHUD showSuccess:@"删除成功"];
+            [self.UUIDArr removeObjectAtIndex:btn.tag-2001];
+            NSLog(@"~~~~~%@,,,,%@",result,self.UUIDArr);
+        } failure:^(NSError *error) {
+            
+        }];
         //view子试图全部清掉
         for (UIView * view in self.attachmentView.subviews) {
             [view removeFromSuperview];
@@ -221,6 +241,7 @@
         //重新绘制附件
         [self fujian:self.didSelectArr];
         }
+    
         
     }
 #pragma mark----
@@ -241,6 +262,8 @@
 //    是否滑动了
     self.isPicker = YES;
     self.name = self.attachmentArr[row];
+    //选择完毕之后发送文件
+    
 }
 
 
@@ -378,7 +401,7 @@
 //    QuerySentBoxList
 //    http://19.89.119.59:7002/oa
     //获取随机的UUID
-    self.UUID = [[self uuidString] stringByReplacingOccurrencesOfString:@"-" withString:@""];
+    
     
     NSString  * str = [NSString stringWithFormat:@"%@/AppHttpService?method=SendEmail&emailId=%@&receiverId=",[path UstringWithURL:nil],self.UUID];
         for (int i = 0; i < self.arrayM.count; ++i) {
@@ -407,12 +430,39 @@
     NSLog(@"·转码后%@",[str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]);
     self.str = str;
     
-    dispatch_sync(dispatch_get_global_queue(0, 0), ^{
-        NSLog(@"!!!!!!!%@",[NSString stringWithFormat:@"%@/%@",self.filePath,self.didSelectArr.lastObject]);
-        //发送文件
-        for (NSString * name in self.didSelectArr) {
-            [self sendAttachmentFileName:name filepath:[NSString stringWithFormat:@"%@/%@",self.filePath,name]];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        //发送文件内容
+    [[KYNetManager sharedNetManager]POST:[self.str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] parameters:nil success:^(id result) {
+        BOOL status = [[result objectForKey:@"status"] boolValue];
+        if (!status) {
+            [MBProgressHUD showError:@"发送文件失败，稍后再试"];
+            return ;
         }
+        //返回主线程更新UI
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //        NSArray * arr = [data dataWithDic:result[@"data"]];
+            //        data * data1 = arr.lastObject;
+
+            if (self.tempMail) {
+                //这个赋值，是给CustomCollectionViewCell中的删除功能删除草稿箱对应的文件
+                self.tempMail();
+            }
+            if (self.blockName) {
+                self.blockName(@"1");
+            }
+            NSArray * controllers = self.navigationController.viewControllers;
+            [self.navigationController popToViewController:controllers[2]  animated:YES];
+
+        });
+    } failure:^(NSError *error) {
+        [MBProgressHUD showError:@"发送文件失败，稍后再试"];
+    }];
+        
+        
+        
+        
+        
+        NSLog(@"!!!!!!!%@",[NSString stringWithFormat:@"%@/%@",self.filePath,self.didSelectArr.lastObject]);
     });
     }
 -(void)showSuccess{
@@ -420,6 +470,9 @@
 }
 
 -(void)sendAttachmentFileName:(NSString *)fileName filepath:(NSString *)filePath{
+    if (self.UUID == nil) {
+        self.UUID = [[self uuidString] stringByReplacingOccurrencesOfString:@"-" withString:@""];
+    }
     // NSURL
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/AppUploadService?biz=webmailattachment&processid=%@&encryption=&bizclass=&creatorid=",[path UstringWithURL:nil],self.UUID]];
     
@@ -436,51 +489,33 @@
 //    NSString *fileName1 = @"1.jpg";
 //    NSString *path1 = [[NSBundle mainBundle]pathForResource:fileName1 ofType:nil];
 //    NSData *fileData1 = [NSData dataWithContentsOfFile:path1];
-//    
-//
+    
+
 //    NSString *fileName2 = @"2.jpg";
 //    NSString *path2 = [[NSBundle mainBundle]pathForResource:fileName2 ofType:nil];
 //    NSData *fileData2 = [NSData dataWithContentsOfFile:path2];
 //    // 设置请求体
-//    request.HTTPBody = [self dataWithFileDatas:@{fileName1:fileData1,fileName2:fileData2}
+//    request.HTTPBody = [sendEmail dataWithFileDatas:@{fileName1:fileData1,fileName2:fileData2}
 //                                    fileldName:@"Filedata" params:nil];
 
     NSData *fileData1 = [NSData dataWithContentsOfFile:filePath];
-
+//
     request.HTTPBody = [sendEmail dataWithFileData:fileData1 fieldName:@"Filedata" fileName:fileName];
     
     // NSURLConnection
     [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
         id result = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
-        NSLog(@"！！！！！！%@",result);
+        
         BOOL status = [[result objectForKey:@"status"] boolValue];
         if (status) {
-            //发送文件内容
-            [[KYNetManager sharedNetManager]POST:[self.str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] parameters:nil success:^(id result) {
-                BOOL status = [[result objectForKey:@"status"] boolValue];
-                if (!status) {
-                    [MBProgressHUD showError:@"发送文件失败，稍后再试"];
-                    return ;
-                }
-                //返回主线程更新UI
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    //        NSArray * arr = [data dataWithDic:result[@"data"]];
-                    //        data * data1 = arr.lastObject;
-                    
-                    if (self.tempMail) {
-                        //这个赋值，是给CustomCollectionViewCell中的删除功能删除草稿箱对应的文件
-                        self.tempMail();
-                    }
-                    if (self.blockName) {
-                        self.blockName(@"1");
-                    }
-                    NSArray * controllers = self.navigationController.viewControllers;
-                    [self.navigationController popToViewController:controllers[2]  animated:YES];
-                    
-                });
-            } failure:^(NSError *error) {
-                [MBProgressHUD showError:@"发送文件失败，稍后再试"];
-            }];
+            //文件上传之后，对文件UUID进行记录，添加到数组当中去
+            NSDictionary * dic = result[@"file"];
+            [self.UUIDArr addObject:dic[@"fileId"]];
+            NSLog(@"上传文件添加uuid%@",self.UUIDArr);
+            [MBProgressHUD hideHUD];
+        }else{
+            [MBProgressHUD showError:@"上传失败"];
+            
         }
     }];
 
@@ -527,7 +562,7 @@
 
         if (!status) {
             //说明请求错误；
-            [MBProgressHUD showError:@"服务器连接失败"];
+            [MBProgressHUD showError:@"保存失败"];
             return ;
         }
 
@@ -585,5 +620,11 @@
         _didSelectArr = [NSMutableArray array];
     }
     return _didSelectArr;
+}
+-(NSMutableArray *)UUIDArr{
+    if (_UUIDArr == nil) {
+        _UUIDArr = [[NSMutableArray alloc]init];
+    }
+    return _UUIDArr;
 }
 @end
