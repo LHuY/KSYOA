@@ -47,6 +47,7 @@
         return;
     }
     NSString * a = [NSString stringWithFormat:@"%@/AppHttpService?method=UpPassWord&oldpw=%@&newpw=%@",[path UstringWithURL:nil],self.oldPassword.text,self.certainPassword.text];
+    
     [[KYNetManager sharedNetManager]POST:a parameters:nil success:^(id result) {
         BOOL status = [[result objectForKey:@"status"] boolValue];
         if (!status) {

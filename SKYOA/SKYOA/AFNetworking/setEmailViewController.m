@@ -163,7 +163,10 @@
         [MBProgressHUD showMessage:@"上传中。。。"];
         
             [self sendAttachmentFileName:self.name filepath:[NSString stringWithFormat:@"%@/%@",self.filePath,self.name]];
-        
+        //判断是否为三个文件，如果是隐藏添加附件
+        if (self.didSelectArr.count == 3) {
+            self.attachmentBtn.hidden = YES;
+        }
 
     }else{
         self.isTunch = YES;
@@ -216,7 +219,7 @@
     }
 
 }
-    //点击附件，用来查阅
+    //删除附件
 -(void)bnts:(UIButton *)btn{
    long int count = btn.tag - 1000;
     if (count<10) {
@@ -230,7 +233,9 @@
             //删除成功之后，删除self.UUIDArr对应的UUID
             [MBProgressHUD showSuccess:@"删除成功"];
             [self.UUIDArr removeObjectAtIndex:btn.tag-2001];
-            NSLog(@"~~~~~%@,,,,%@",result,self.UUIDArr);
+            if (self.didSelectArr.count != 3) {
+                self.attachmentBtn.hidden = NO;
+            }
         } failure:^(NSError *error) {
             
         }];
@@ -424,6 +429,7 @@
     }else{
         
         str = [NSString stringWithFormat:@"%@&title=%@&content=%@",str,[self.textFile2.text stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding],[self.textView.text stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSLog(@"~~~%@",str);
     }
     
     NSLog(@"～转码前%@",str);
@@ -470,9 +476,9 @@
 }
 
 -(void)sendAttachmentFileName:(NSString *)fileName filepath:(NSString *)filePath{
-    if (self.UUID == nil) {
-        self.UUID = [[self uuidString] stringByReplacingOccurrencesOfString:@"-" withString:@""];
-    }
+    
+    
+     NSLog(@"~~~%@,,,,%@",fileName,filePath);
     // NSURL
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/AppUploadService?biz=webmailattachment&processid=%@&encryption=&bizclass=&creatorid=",[path UstringWithURL:nil],self.UUID]];
     
@@ -507,12 +513,13 @@
         id result = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
         
         BOOL status = [[result objectForKey:@"status"] boolValue];
+        [MBProgressHUD hideHUD];
         if (status) {
+            NSLog(@"%@",result);
             //文件上传之后，对文件UUID进行记录，添加到数组当中去
             NSDictionary * dic = result[@"file"];
             [self.UUIDArr addObject:dic[@"fileId"]];
             NSLog(@"上传文件添加uuid%@",self.UUIDArr);
-            [MBProgressHUD hideHUD];
         }else{
             [MBProgressHUD showError:@"上传失败"];
             
@@ -627,4 +634,12 @@
     }
     return _UUIDArr;
 }
+-(NSString *)UUID{
+    if (_UUID == nil) {
+        _UUID = [[self uuidString] stringByReplacingOccurrencesOfString:@"-" withString:@""];
+
+    }
+    return _UUID;
+}
+
 @end

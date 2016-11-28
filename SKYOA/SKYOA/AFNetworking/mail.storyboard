@@ -8,7 +8,7 @@
         <!--Email View Controller-->
         <scene sceneID="Ewk-X1-ddu">
             <objects>
-                <viewController id="l3N-YP-DZD" customClass="EmailViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="email" id="l3N-YP-DZD" customClass="EmailViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Gfr-ht-gxj"/>
                         <viewControllerLayoutGuide type="bottom" id="OQG-gM-VVx"/>
@@ -22,7 +22,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JLc-Ma-Gir" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="587.5" y="218.5"/>
+            <point key="canvasLocation" x="370.5" y="219.5"/>
         </scene>
     </scenes>
 </document>

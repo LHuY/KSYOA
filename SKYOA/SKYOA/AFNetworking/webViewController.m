@@ -72,23 +72,32 @@
     self.title1.hidden = YES;
     self.navBnt.hidden = YES;
     //邮箱人员列表请求
-    [[KYNetManager sharedNetManager]POST:[[path UstringWithURL:nil]stringByAppendingString:@"/AppHttpService?method=GetDeptLsit"] parameters:nil success:^(id result) {
-        BOOL status = [[result objectForKey:@"status"] boolValue];
-        if (status) {
-            self.personData1 = [personData personWithArray:result[@"nextactors"]];
-            
-        }else{
-            
-        }
-    } failure:^(NSError *error) {
-    }];
+    [self paple];
     //添加webView后缀
     [self.URLArr addObject:@"/jsp/app/index.html"];
     //显示首页面
 //    @"http://19.89.119.59:7001/oa/jsp/app/index.html"
     [self pushPageWithURL:[[path UstringWithURL:nil]stringByAppendingString:@"/jsp/app/index.html"]];
    }
+//邮箱人员列表请求
+-(void)paple{
+    //邮箱人员列表请求
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [[KYNetManager sharedNetManager]POST:[[path UstringWithURL:nil]stringByAppendingString:@"/AppHttpService?method=GetDeptLsit"] parameters:nil success:^(id result) {
+            BOOL status = [[result objectForKey:@"status"] boolValue];
+            if (status) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSLog(@"%@",result[@"nextactors"]);
+                    self.personData1 = [personData personWithArray:result[@"nextactors"]];
+                });
+            }else{
+                
+            }
+        } failure:^(NSError *error) {
+        }];
+    });
 
+}
 - (IBAction)en:(id)sender {
 //    NSURL *URL = [[NSBundle mainBundle] URLForResource:@"sad" withExtension:@"doc"];
 //    
@@ -311,10 +320,13 @@
     }
 }
 -(void)pushiMail{
+  
     UIStoryboard * sb = [UIStoryboard storyboardWithName:@"mail" bundle:nil];
-    EmailViewController * vc = [sb instantiateInitialViewController];
+    EmailViewController * vc = [sb instantiateViewControllerWithIdentifier:@"email"];
     if (self.personData1 == nil) {
         [MBProgressHUD showError:@"网络不给力，稍后"];
+        //邮箱人员列表请求
+        [self paple];
     }else{
         vc.personData1 = self.personData1;
         [self.navigationController pushViewController:vc animated:YES];

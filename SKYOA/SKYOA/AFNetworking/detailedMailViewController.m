@@ -14,11 +14,11 @@
 #import "returnMailViewController.h"
 #import "UIButton+baritembtn.h"
 #import "MBProgressHUD+PKX.h"
-#import "TextViewTableViewCell.h"
+
 #import "download.h"
 
 static NSString *cellID=@"cellID";
-@interface detailedMailViewController ()<NSURLConnectionDataDelegate,UIDocumentInteractionControllerDelegate,UITableViewDelegate,UITableViewDataSource>
+@interface detailedMailViewController ()<NSURLConnectionDataDelegate,UIDocumentInteractionControllerDelegate>
 //回复
 @property (weak, nonatomic) IBOutlet UIButton *call;
 //转发
@@ -52,9 +52,9 @@ static NSString *cellID=@"cellID";
 @property (nonatomic, copy) NSString *filePath;
 
 
-//字符串识别，添加tabel
-@property (nonatomic,strong)UITableView *textTableView;
-@property(nonatomic,strong)UITextView *textView1;
+//记录当前要发送的内容文本
+@property (nonatomic, copy) NSString *htmlText;
+
 @end
 @implementation detailedMailViewController
 
@@ -63,8 +63,6 @@ static NSString *cellID=@"cellID";
 //}
 - (void)viewDidLoad {
     [super viewDidLoad];
-    //注册cell
-    [self.textTableView registerClass:[TextViewTableViewCell class] forCellReuseIdentifier:cellID];
     
     if ([self.num isEqualToString:@"1"]) {
         self.call.hidden = YES;
@@ -93,59 +91,66 @@ static NSString *cellID=@"cellID";
 //请求要显示详细信息数据
 -(void)showDataMail_ID:(NSString *)mail_ID{
     
-    NSString * postStr = [NSString stringWithFormat:@"%@/AppHttpService?method=GetEmailHtml&emailId=%@",[path UstringWithURL:nil],mail_ID];
-    [[KYNetManager sharedNetManager]POST:postStr parameters:nil success:^(id result) {
-        BOOL status = [[result objectForKey:@"status"] boolValue];
-        if (!status) {
-            [MBProgressHUD showError:@"数据请求失败"];
-        }
-        NSDictionary * dic = result[@"data"];
+    NSString * postStr = [NSString stringWithFormat:@"%@/AppHttpService?method=GetEmail&emailId=%@",[path UstringWithURL:nil],mail_ID];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [[KYNetManager sharedNetManager]POST:postStr parameters:nil success:^(id result) {
+            BOOL status = [[result objectForKey:@"status"] boolValue];
+            if (!status) {
+                [MBProgressHUD showError:@"数据请求失败"];
+            }
+            NSDictionary * dic = result[@"data"];
+            
+            self.dic = dic;
+            NSLog(@"~~~~%@",dic);
+            //获取所以附件
+            NSArray * arr = self.dic[@"attachment"];
+            //动态获取附件按钮
+            
+            for (int i = 0; i < arr.count; ++i) {
+                UIButton * btn = [[UIButton alloc]init];
+                btn.tag = 1001+i;
+                btn.frame = CGRectMake(0, 21 * i, [[UIScreen mainScreen] bounds].size.width, 21);
+                //获取第i个附件
+                NSDictionary *attachment = arr[i];
+                [btn setTitle:attachment[@"fileName"] forState:UIControlStateNormal ];
+                //添加一个点击事件
+                if (i == 0) {
+                    [btn addTarget:self action:@selector(bnt1) forControlEvents:UIControlEventTouchDown];
+                    self.btn1 = btn;
+                }
+                if (i == 1) {
+                    self.btn2 = btn;
+                    [btn addTarget:self action:@selector(bnt2) forControlEvents:UIControlEventTouchDown];
+                }
+                if (i == 2) {
+                    self.btn3 = btn;
+                    [btn addTarget:self action:@selector(bnt3) forControlEvents:UIControlEventTouchDown];
+                }
+                //让按钮文字居中
+                btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+                btn.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
+                btn.titleLabel.font = [UIFont systemFontOfSize:15];
+                [btn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+                [btn setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
+                [self.attachmentView addSubview:btn];
+            }
+            self.mail_Name_send.text = dic[@"sender"];
+            self.mail_Name.text = dic[@"receiver"];
+            self.titleLabel.text = dic[@"subject"];
+            self.htmlText = dic[@"content"];
+            
+            //html文本转换格式显示textView
+//            NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[dic[@"content"] dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
+//            
+//            self.textView.attributedText = attributedString;
+//            NSLog(@"~~~%@",dic[@"content"]);
+                    self.textView.text = dic[@"content"];
+        } failure:^(NSError *error) {
+            NSLog(@"失败%@",error);
+        }];
         
-        self.dic = dic;
-        NSLog(@"~~~~%@",dic);
-        //获取所以附件
-         NSArray * arr = self.dic[@"attachment"];
-        //动态获取附件按钮
-        
-        for (int i = 0; i < arr.count; ++i) {
-            UIButton * btn = [[UIButton alloc]init];
-            btn.tag = 1001+i;
-            btn.frame = CGRectMake(0, 21 * i, [[UIScreen mainScreen] bounds].size.width, 21);
-            //获取第i个附件
-            NSDictionary *attachment = arr[i];
-            [btn setTitle:attachment[@"fileName"] forState:UIControlStateNormal ];
-            //添加一个点击事件
-            if (i == 0) {
-                [btn addTarget:self action:@selector(bnt1) forControlEvents:UIControlEventTouchDown];
-                self.btn1 = btn;
-            }
-            if (i == 1) {
-                self.btn2 = btn;
-                [btn addTarget:self action:@selector(bnt2) forControlEvents:UIControlEventTouchDown];
-            }
-            if (i == 2) {
-                self.btn3 = btn;
-                [btn addTarget:self action:@selector(bnt3) forControlEvents:UIControlEventTouchDown];
-            }
-            //让按钮文字居中
-            btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-            btn.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
-            btn.titleLabel.font = [UIFont systemFontOfSize:15];
-            [btn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-            [btn setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
-            [self.attachmentView addSubview:btn];
-        }
-        self.mail_Name_send.text = dic[@"sender"];
-        self.mail_Name.text = dic[@"receiver"];
-        self.titleLabel.text = dic[@"subject"];
-        NSLog(@"%@",dic[@"content"]);
-        NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[dic[@"content"] dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
-//         NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[dic[@"subject"]dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
-        self.textView.attributedText  = attributedString;
-//        self.textView.text = dic[@"content"];
-    } failure:^(NSError *error) {
-        NSLog(@"失败%@",error);
-    }];
+    });
+    
 }
 //附件1
 -(void)bnt1{
@@ -173,7 +178,6 @@ static NSString *cellID=@"cellID";
     self.scrollView.contentInset=UIEdgeInsetsMake(-60,0 , 0, 0);
     self.textView.editable = NO;
 }
-//回复邮件
 - (IBAction)retureMail:(id)sender {
     //跳转到编辑界面
     UIStoryboard * sb = [UIStoryboard storyboardWithName:@"returnMail" bundle:nil];
@@ -187,7 +191,7 @@ static NSString *cellID=@"cellID";
     NSArray * arrSender = [sender1 componentsSeparatedByString:@";"];
     
     //字典转模型
-     vc.arrayM = [NSMutableArray array];
+    vc.arrayM = [NSMutableArray array];
     for (int i = 0; i < arrSenderOrganId.count; ++i) {
         personData * model = [[personData alloc]init];
         model.organId = arrSenderOrganId[i];
@@ -196,22 +200,114 @@ static NSString *cellID=@"cellID";
     }
     vc.personData1 = self.personData1;
     //设置回复前的内容信息
-    NSString * line = @"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-    NSString * sendMan = [NSString stringWithFormat:@"  发件人:  %@\n",self.dic[@"sender"]];
+    NSString * line = @"<br/>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br/>";
+    NSString * sendMan = [NSString stringWithFormat:@"  发件人:  %@<br/>",self.dic[@"sender"]];
     //发件时间
-    NSString * time = [NSString stringWithFormat:@"  发件时间:  %@\n",self.model.SEND_TIME];
-    
+    NSString * time = [NSString stringWithFormat:@"  发件时间:  %@<br/>",self.model.SEND_TIME];
     //主题
-    NSString * title = [NSString stringWithFormat:@"  主题:回复：%@\n",self.dic[@"subject"]];
-   NSString * line1 = @"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-    NSString  * content = self.textView.text;
-    NSString * togetter = [NSString stringWithFormat:@"%@%@%@%@%@%@",line,sendMan,time,title,line1,content];
+    NSString * title = [NSString stringWithFormat:@"  主题:回复：%@<br/>",self.dic[@"subject"]];
+    NSString * line1 = @"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br/>";
+    NSString * togetter;
+    if([self.htmlText rangeOfString:@"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"].location !=NSNotFound)//_roaldSearchText
+    {
+         NSString  * content =  [self pinjie:self.htmlText];
+         togetter = [NSString stringWithFormat:@"%@%@%@%@%@<br/>%@",line,sendMan,time,title,line1,content];
+    }
+    else
+    {
+       togetter = [NSString stringWithFormat:@"%@%@%@%@%@<br/>%@",line,sendMan,time,title,line1,self.htmlText];
+    }
+   
     //标题和内容打包
     NSArray * relay = @[self.titleLabel.text,togetter];
     vc.relay = relay;
+    
     [self.navigationController pushViewController:vc animated:YES];
 }
-
+-(NSString *)pinjie:(NSString *)string{
+    NSMutableArray * arr = (NSMutableArray*)[string componentsSeparatedByString:@"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"];
+     NSLog(@"%@",arr);
+    //获取内容消息
+    NSString * connent = arr.firstObject;
+    [arr removeObject:arr.firstObject];
+//     NSLog(@"%@",connent);
+    //arr只剩下之前信息内容
+    NSMutableArray * oushu = [NSMutableArray array];
+    NSMutableArray * qishu = [NSMutableArray array];
+    for (int i = 1; i < arr.count+1; i++){
+        NSString * str = arr[i-1];
+        if (i%2==0) {
+            //偶数   内容
+            [oushu addObject:str];
+               NSLog(@"~~~~~~~~	%@",oushu);
+        }else{
+//            发件人:  鲁林伟
+//            发件时间:  20161123 10:55:05
+//            主题:回复：Asdasd
+            [qishu addObject:str];
+        }
+    }
+     NSLog(@"!!!!!!!!!!!!%@",oushu);
+    //已经编号的   发件人:  鲁林伟
+    //            发件时间:  20161123 10:55:05
+    //            主题:回复：Asdasd
+    NSMutableArray * array = [NSMutableArray array];
+    for (NSString * str in qishu) {
+        NSArray * arr1 = [str componentsSeparatedByString:@"发件时间"];
+        NSArray * arr2 = [arr1.lastObject componentsSeparatedByString:@"主题"];
+        NSLog(@"~~~~~~~~	%@",arr2);
+        NSString * str2 = [NSString stringWithFormat:@"%@<br/>主题%@",arr2.firstObject,arr2.lastObject];
+     
+        NSString * str3 = [NSString stringWithFormat:@"%@<br/>发件时间%@<br/>",arr1.firstObject,str2];
+        NSLog(@"~~~~~~~~	%@",str3);
+        [array addObject:[NSString stringWithFormat:@"<br/>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br/>%@~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br/>",str3]];
+        NSLog(@"%@",array);
+    }
+    NSString * content6= @"";
+     //偶数   内容
+    
+    for (int i = 0; i < oushu.count*2; i++){
+        int  count1 = 0;
+        int  count2 = 0;
+        if (i%2 == 0) {
+            //偶数，则是内容添加
+           
+            content6 = [NSString stringWithFormat:@"%@%@",content6,oushu[count1]];
+            NSLog(@"!!!爱好是打算打卡时间的空间按时到家里%@",content6);
+            count1 ++;
+        }else{
+           
+            //则是奇书，时间，发件添加
+            content6 = [NSString stringWithFormat:@"%@%@%@",connent,array[count2],content6];
+            count2 ++;
+             NSLog(@"~~~%@",content6);
+        }
+    }
+    return content6;
+//    NSString * head = [NSString stringWithFormat:@"%@<br/>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br/>%@发件时间%@",arr.firstObject,arr1.firstObject];
+}
+////如果不是转发，直接发送过来的,直接返回内容
+//-(NSString *)haoWith:(NSString *)HtmlText{
+//    NSArray * arr = [HtmlText componentsSeparatedByString:@"</p>"];
+//   
+//    
+//    NSLog(@"%@",arr.firstObject);
+//    NSString * str =[arr.firstObject substringFromIndex:3];
+//    return  str;
+//}
+////适合转发的时候调用
+////将Thml的内容提取出来
+////返回来的内容，第一个为信息内容，第二个为html去除信息内容的以外标签
+//-(NSArray *)stringWithHtmlText:(NSString*)string{
+//    NSArray * arr = [string componentsSeparatedByString:@"</div>"];
+//    NSString * head = arr.firstObject;
+//    head  = [NSString stringWithFormat:@"%@</div>",head];
+//    NSLog(@"~~~%lu",(unsigned long)head.length);
+//    //获取内容一下的标签
+//    NSString * str2= [self.htmlText substringFromIndex:head.length];
+//    NSLog(@"~~~%@",str2);
+//    return @[head,str2];
+//}
 //转发给朋友
 - (IBAction)copyMail:(id)sender {
     //跳转到编辑界面
@@ -269,89 +365,6 @@ static NSString *cellID=@"cellID";
 
 
 
-//集成进来
-//-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-//{
-//    
-//    return self.dataSoureArr.count;
-//}
-//
-//-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    TextViewTableViewCell *cell =[tableView dequeueReusableCellWithIdentifier:cellID forIndexPath:indexPath];
-//    cell.dataDic = _dataSoureArr[indexPath.row];
-//    
-//    
-//    return cell;
-//}
-//
-//-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    UITextView *textView = [[UITextView alloc]initWithFrame:CGRectZero];
-//    NSString *nickName = _dataSoureArr[indexPath.row][@"nickName"];
-//    NSString *contentStr = _dataSoureArr[indexPath.row][@"content"];
-//    NSString *timeStr = _dataSoureArr[indexPath.row][@"time"];
-//    
-//    NSString *allContentStr = [NSString stringWithFormat: @"%@: %@ %@",nickName,contentStr,timeStr];
-//    textView.attributedText = [self setLabelTextColor:allContentStr nick:nickName time:timeStr];
-//    [textView sizeToFit];
-//    
-//    //textView的高度
-//    float textViewHeight = [self heightForString:textView andWidth:self.view.bounds.size.width -20];
-//    
-//    
-//    //让cell的高度 等于textView的高度
-//    return textViewHeight;
-//    
-//}
-//
-//
-//- (float) heightForString:(UITextView *)textView andWidth:(float)width{
-//    CGSize sizeToFit = [textView sizeThatFits:CGSizeMake(width, MAXFLOAT)];
-//    return sizeToFit.height;
-//}
-//
-//
-////这里主要是获取字符串大小  配合上面的方法准确计算出textView的高度 来动态设置cell的高度
-//- (NSMutableAttributedString *)setLabelTextColor:(NSString *)string nick:(NSString *)nickName time:(NSString *)time
-//{
-//    NSMutableAttributedString *attributedStr = [[NSMutableAttributedString alloc] initWithString:string];
-//    
-//    NSRange range = [string rangeOfString:nickName];
-//    [attributedStr addAttributes:@{NSForegroundColorAttributeName:[UIColor blueColor],NSFontAttributeName:[UIFont systemFontOfSize:18]} range:NSMakeRange(0, range.length )];
-//    NSRange range1 = [string rangeOfString:time];
-//    [attributedStr addAttributes:@{NSForegroundColorAttributeName:[UIColor grayColor],NSFontAttributeName:[UIFont systemFontOfSize:12]} range:NSMakeRange(range1.location,range1.length)];
-//    
-//    [attributedStr addAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:16]} range:NSMakeRange(range.location+range.length,string.length-range1.length-range.length)];
-//    
-//    return attributedStr;
-//}
-//-(NSArray *)dataSoureArr{
-//    if (_dataSoureArr == nil) {
-//         _dataSoureArr = [[NSArray alloc] init];
-//        _dataSoureArr = @[
-//                    @{@"content":@"18824286088",@"time":@"2016-5-13",@"nickName":@"风中的草"},
-//                          @{@"content":@"测试策划侧反馈食风坡附近破冰我偶尔偶尔玩vmfew复刻品咖啡",@"time":@"2014-12-13",@"nickName":@"hahaha"},
-//                          @{@"content":@"测试策划侧反馈食风坡 vmfew复刻品咖啡配咖啡分 www.baidu.com 开拍咖算分为破发金额为平均分破而价格破耳机公婆而价格破耳机股票而价格破而价格破耳机公婆二极管 ",@"time":@"2014-12-13",@"nickName":@"苦逼的码农啊"},
-//                          @{@"content":@"测试策划侧反馈食风坡vmfew复刻品咖啡配咖啡分开拍咖算 0755-86302744 分为破发金额为平均分破而价格破耳机公婆而价格破耳机股票而价格破而价格破耳机公婆二极管 ",@"time":@"2014-12-13",@"nickName":@"有用给个评论支持下"},
-//                          @{@"content":@"测试策划侧反馈食风坡 的反馈配额外房客网客服 876333335@qq.com 品味咖啡配网客服皮肤科访客无法看房客网可分为罚款未开发未付款为破耳机公婆而价格破耳机股票而价格破而价格破耳机公婆二极管 ",@"time":@"2014-12-13",@"nickName":@"共同进步"}
-//                          ];
-//    }
-//    return _dataSoureArr;
-//}
-//-(UITableView *)textTableView
-//{
-//    if (!_textTableView) {
-//        _textTableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
-//        _textTableView.delegate = self;
-//        _textTableView.dataSource =self;
-//        _textTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];//去掉多余的分割线
-//        [self.view addSubview:_textTableView];
-//    }
-//    
-//    return _textTableView;
-//    
-//}
 
 
 @end

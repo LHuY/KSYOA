@@ -93,8 +93,8 @@
     [super viewDidAppear:animated];
         self.friendTableView.alpha = 0;
         [self.view addSubview:self.friendTableView];
-    [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(TempMail) userInfo:nil repeats:YES];
-    [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(sendMail) userInfo:nil repeats:YES];
+//    [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(TempMail) userInfo:nil repeats:YES];
+//    [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(sendMail) userInfo:nil repeats:YES];
     [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(QueryinBoxList) userInfo:nil repeats:YES];
 }
 - (void)viewDidLoad {
@@ -233,7 +233,7 @@
 }
 
 -(void)dealloc{
-    NSLog(@"释放");
+    NSLog(@"我要释放");
 }
 //搜索部分
 #pragma mark - Init
