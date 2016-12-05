@@ -60,6 +60,30 @@
 -(BOOL)prefersStatusBarHidden{
     return YES;
 }
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.isTunch = NO;
+    self.isPicker= NO;
+    //    self.attachmentBtn.hidden = YES;
+    //左边的导航栏按钮
+    UIButton * doBack = [UIButton BarButtonItemWithTitle:@"返回" addImage:[UIImage imageNamed:@"return"]];
+    //给返回按钮添加点击事件
+    [doBack addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:doBack];
+    UIButton * createEmail = [UIButton BarButtonItemWithTitle:@"发送" addImage:[UIImage imageNamed:@"se"]];
+    [createEmail addTarget:self action:@selector(send) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:createEmail];
+    self.headTitle.text  = self.relay.firstObject;
+    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[self.relay.lastObject dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
+    self.textView.attributedText  = attributedString;
+    //    self.textView.text = [NSString stringWithFormat:@"\n\n%@",self.relay.lastObject];
+    //成为第一响应者
+    [self.textView becomeFirstResponder];
+    //设置光标位置
+    _textView.selectedRange=NSMakeRange(0,0) ;   //起始位置
+    self.headTitle.delegate = self;
+    [self neceWitharr:self.arrayM];
+}
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     [self.textView resignFirstResponder];
     [self.headTitle resignFirstResponder];
@@ -93,8 +117,6 @@
         [MBProgressHUD showMessage:@"上传中。。。"];
         
         [self sendAttachmentFileName:self.name filepath:[NSString stringWithFormat:@"%@/%@",self.filePath,self.name]];
-        
-        
     }else{
         self.isTunch = YES;
         self.name =nil;
@@ -121,8 +143,6 @@
         //设置代理
         pickerView.delegate = self;
     }
-    
-    
 }//绘制附件
 -(void)fujian:(NSMutableArray *)didSelectArr{
     for (int i = 0; i < didSelectArr.count; ++i) {
@@ -165,7 +185,7 @@
         } failure:^(NSError *error) {
             
         }];
-
+        
         //view子试图全部清掉
         for (UIView * view in self.attachmenView.subviews) {
             [view removeFromSuperview];
@@ -180,12 +200,10 @@
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView{
     return 1;
 }
-
 //指定组行数
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component{
     return self.attachmentArr.count;
 }
-
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component{
     return self.attachmentArr[row];
 }
@@ -193,35 +211,6 @@
     //    是否滑动了
     self.isPicker = YES;
     self.name = self.attachmentArr[row];
-}
-
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    self.isTunch = NO;
-    self.isPicker= NO;
-//    self.attachmentBtn.hidden = YES;
-    
-    //左边的导航栏按钮
-    UIButton * doBack = [UIButton BarButtonItemWithTitle:@"返回" addImage:[UIImage imageNamed:@"return"]];
-    //给返回按钮添加点击事件
-    [doBack addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:doBack];
-    
-    UIButton * createEmail = [UIButton BarButtonItemWithTitle:@"发送" addImage:[UIImage imageNamed:@"se"]];
-    [createEmail addTarget:self action:@selector(send) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:createEmail];
-    self.headTitle.text  = self.relay.firstObject;
-    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[self.relay.lastObject dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
-    
-    self.textView.attributedText  = attributedString;
-//    self.textView.text = [NSString stringWithFormat:@"\n\n%@",self.relay.lastObject];
-    //成为第一响应者
-    [self.textView becomeFirstResponder];
-    //设置光标位置
-    _textView.selectedRange=NSMakeRange(0,0) ;   //起始位置
-    self.headTitle.delegate = self;
-    [self neceWitharr:self.arrayM];
 }
 -(void)back{
     //提示是否保存
@@ -264,12 +253,12 @@
         [MBProgressHUD showError:@"收件人or标题不能为空"];
         return;
     }else{
-//        NSArray * arr = [self.textView.text componentsSeparatedByString:@"发件人"];
-//        NSString * head = arr.firstObject;
-//        
-//        head = [NSString stringWithFormat:@"<div style=\"PADDING-BOTTOM: 8px; PADDING-LEFT: 8px; PADDING-RIGHT: 8px;PADDING-TOP: 10px\">%@</div>",head];
-//        head =[NSString stringWithFormat:@"%@%@",head,self.relay.lastObject];
-//        NSLog(@"%@",head);
+        //        NSArray * arr = [self.textView.text componentsSeparatedByString:@"发件人"];
+        //        NSString * head = arr.firstObject;
+        //
+        //        head = [NSString stringWithFormat:@"<div style=\"PADDING-BOTTOM: 8px; PADDING-LEFT: 8px; PADDING-RIGHT: 8px;PADDING-TOP: 10px\">%@</div>",head];
+        //        head =[NSString stringWithFormat:@"%@%@",head,self.relay.lastObject];
+        //        NSLog(@"%@",head);
         NSArray * arr = [self.textView.text componentsSeparatedByString:@"~"];
         NSString * he = [NSString stringWithFormat:@"%@<br/>%@",arr.firstObject,self.relay.lastObject];
         NSLog(@"%@",he);
@@ -330,23 +319,14 @@
 - (NSString *)uuidString
 
 {
-    
     CFUUIDRef uuid_ref = CFUUIDCreate(NULL);
-    
     CFStringRef uuid_string_ref= CFUUIDCreateString(NULL, uuid_ref);
-    
     NSString *uuid = [NSString stringWithString:(__bridge NSString *)uuid_string_ref];
-    
     CFRelease(uuid_ref);
-    
     CFRelease(uuid_string_ref);
-    
     return [uuid lowercaseString];
-    
 }
 -(void)sendAttachmentFileName:(NSString *)fileName filepath:(NSString *)filePath{
-    
-    
     NSLog(@"~~~%@,,,,%@",fileName,filePath);
     // NSURL
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/AppUploadService?biz=webmailattachment&processid=%@&encryption=&bizclass=&creatorid=",[path UstringWithURL:nil],self.UUID]];

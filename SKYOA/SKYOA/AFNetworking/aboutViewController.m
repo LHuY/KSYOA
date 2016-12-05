@@ -17,7 +17,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:0 green:0.2 blue:0.7 alpha:1];
     NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
     // 当前应用软件版本  比如：1.0.1

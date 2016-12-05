@@ -42,14 +42,8 @@
     [super viewWillAppear:animated];
     
 }
-- (IBAction)text:(id)sender {
-    UIStoryboard  * SB = [UIStoryboard storyboardWithName:@"detailedMail" bundle:nil];
-    detailedMailViewController * VC = [SB  instantiateInitialViewController];
-    [self.navigationController pushViewController:VC animated:YES];
-}
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
     self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:0 green:0.2 blue:0.7 alpha:1];
         self.passWord.text = [NSString base64Decode:self.dic[@"密码"]];
@@ -155,10 +149,7 @@
                         [MBProgressHUD load];
                         
                     }];
-                    
 //@"http://19.89.119.59:7002/oa/AppLogin_outService?method=Login&loginUserId=llw&loginPassword=123&lmei="
-                   
-                    
                 }else{
                     //跳转
                     [self PushServer];

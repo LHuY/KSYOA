@@ -32,7 +32,7 @@
     
     
     
-
+    
     self.myTableView.rowHeight = 50;
     self.myTableView.allowsSelection = NO; // We essentially implement our own selection
     self.myTableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
@@ -48,12 +48,12 @@
     static NSString *cellIdentifier = @"Cell";
     
     SWTableViewCell *cell = (SWTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-
+    
     if (cell == nil) {
-//        NSMutableArray *leftUtilityButtons = [NSMutableArray new];
+        //        NSMutableArray *leftUtilityButtons = [NSMutableArray new];
         NSMutableArray *rightUtilityButtons = [NSMutableArray new];
         
-
+        
         [rightUtilityButtons addUtilityButtonWithColor:
          [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f]
                                                  title:@"Delete"];
@@ -114,18 +114,18 @@
         vc.isTempMail = YES;
         //如果是草稿箱发送了，会回调这个函数，然后删除草稿箱已经发送的那个文件
         vc.tempMail = ^(){
-                //删除草稿箱对应的邮件
-                self.model= self.dataArray[indexPath.row-1];
-                
-                [[KYNetManager sharedNetManager]POST:[NSString stringWithFormat:@"%@/AppHttpService?method=DelEmail&emailId=%@&type=%@",[path UstringWithURL:nil],self.model.MSG_ID,self.count1] parameters:nil success:^(id result) {
-                    NSLog(@"成功!!~@@@@@@@%@ ～～～%@",result   ,[NSString stringWithFormat:@"%@/AppHttpService?method=DelEmail&emailId=%@&type=%@",[path UstringWithURL:nil],self.model.MSG_ID,self.count1]);
-                } failure:^(NSError *error) {
-                    NSLog(@"错误!!~@@@@@@@%@",error);
-                }];
-                // Delete button was pressed
-                
-                [self.dataArray removeObjectAtIndex:indexPath.row-1];
-                [self.myTableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+            //删除草稿箱对应的邮件
+            self.model= self.dataArray[indexPath.row-1];
+            
+            [[KYNetManager sharedNetManager]POST:[NSString stringWithFormat:@"%@/AppHttpService?method=DelEmail&emailId=%@&type=%@",[path UstringWithURL:nil],self.model.MSG_ID,self.count1] parameters:nil success:^(id result) {
+                NSLog(@"成功!!~@@@@@@@%@ ～～～%@",result   ,[NSString stringWithFormat:@"%@/AppHttpService?method=DelEmail&emailId=%@&type=%@",[path UstringWithURL:nil],self.model.MSG_ID,self.count1]);
+            } failure:^(NSError *error) {
+                NSLog(@"错误!!~@@@@@@@%@",error);
+            }];
+            // Delete button was pressed
+            
+            [self.dataArray removeObjectAtIndex:indexPath.row-1];
+            [self.myTableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationLeft];
         };
         [self.nav pushViewController:vc animated:YES];
         return;
@@ -136,7 +136,7 @@
     vc.model = self.dataArray[indexPath.row-1];
     vc.personData1 = self.personData1;
     vc.isSearch = NO;
-    vc.num = self.count1;    
+    vc.num = self.count1;
     [self.nav pushViewController:vc animated:YES];
     
 }
@@ -185,7 +185,7 @@
                 NSLog(@"错误!!~@@@@@@@%@",error);
             }];
             // Delete button was pressed
-           
+            
             [self.dataArray removeObjectAtIndex:cellIndexPath.row-1];
             [self.myTableView deleteRowsAtIndexPaths:@[cellIndexPath] withRowAnimation:UITableViewRowAnimationLeft];
             break;

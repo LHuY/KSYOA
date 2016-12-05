@@ -57,7 +57,7 @@
 
 
 - (void)viewDidLoad {
-         [super viewDidLoad];
+    [super viewDidLoad];
     //隐藏导航栏
     
     self.navigationController.navigationBarHidden =  YES;
@@ -76,9 +76,9 @@
     //添加webView后缀
     [self.URLArr addObject:@"/jsp/app/index.html"];
     //显示首页面
-//    @"http://19.89.119.59:7001/oa/jsp/app/index.html"
+    //    @"http://19.89.119.59:7001/oa/jsp/app/index.html"
     [self pushPageWithURL:[[path UstringWithURL:nil]stringByAppendingString:@"/jsp/app/index.html"]];
-   }
+}
 //邮箱人员列表请求
 -(void)paple{
     //邮箱人员列表请求
@@ -96,21 +96,21 @@
         } failure:^(NSError *error) {
         }];
     });
-
+    
 }
 - (IBAction)en:(id)sender {
-//    NSURL *URL = [[NSBundle mainBundle] URLForResource:@"sad" withExtension:@"doc"];
-//    
-//    if (URL) {
-//        // Initialize Document Interaction Controller
-//        self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:URL];
-//        
-//        // Configure Document Interaction Controller
-//        [self.documentInteractionController setDelegate:self];
-//        
-//        // Preview PDF
-//        [self.documentInteractionController presentPreviewAnimated:YES];
-//    }
+    //    NSURL *URL = [[NSBundle mainBundle] URLForResource:@"sad" withExtension:@"doc"];
+    //
+    //    if (URL) {
+    //        // Initialize Document Interaction Controller
+    //        self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:URL];
+    //
+    //        // Configure Document Interaction Controller
+    //        [self.documentInteractionController setDelegate:self];
+    //
+    //        // Preview PDF
+    //        [self.documentInteractionController presentPreviewAnimated:YES];
+    //    }
     [self.webView reload];
     
 }
@@ -120,7 +120,6 @@
 - (IBAction)fanhui:(id)sender {
     if (self.ViewArr.count ==1) {
         //如果只有一个webVIew什么也不干；
-        
         return;
     }
     if (self.ViewArr.count == 2) {
@@ -129,7 +128,7 @@
         //如果webView只有一层，则显示
         self.caidan.hidden = NO;
     }
-   UIWebView * view = self.ViewArr.lastObject;
+    UIWebView * view = self.ViewArr.lastObject;
     [view removeFromSuperview];
     //返回的时候，把最顶端的webVIew除去
     [self.ViewArr removeLastObject];
@@ -141,8 +140,6 @@
 
 #pragma mark--UIWebview-代理
 - (void)webViewDidStartLoad:(UIWebView *)webView{
-   
-    
 }
 - (IBAction)lookFile:(NSString *)fileName {
     NSFileManager *manager = [NSFileManager defaultManager];
@@ -182,7 +179,6 @@
             [self.URLArr addObject:[[jsVal.toString componentsSeparatedByString:@"?"]firstObject]];
             [self pushPageWithURL:[url1 stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         }
-        
     };
     //提供js调用提示框
     context[@"iosShowToast"] = ^(){
@@ -193,7 +189,6 @@
             [alter show];
         }
     };
-   
     context[@"iosDownload"] = ^(){
         NSArray *args = [JSContext currentArguments];
         [[download new] downloadWithURl:args.firstObject fileName:args.lastObject success:^(id result) {
@@ -202,18 +197,15 @@
     };
     //返回 时候调用
     context[@"iosBack"] = ^(){
-        
-
         NSArray *args = [JSContext currentArguments];
         for (int i = 0; i < args.count; ++i) {
-            
             //第一个参数传过来的是URL，判断是否与self.URLarr数组中包含有，如果有包含，就把url的上层WebView都除去
             JSValue * jsVal = args[i];
             if (i == 0) {
                 //判断是否包含有这个URL
                 if([self.URLArr containsObject:jsVal.toString]){
                     //计算url对应的webview上面的View有几个
-                 NSUInteger count = self.URLArr.count-[self.URLArr indexOfObject:jsVal.toString]-1;
+                    NSUInteger count = self.URLArr.count-[self.URLArr indexOfObject:jsVal.toString]-1;
                     for (int i = 0; i < count; ++i) {
                         //依次删除URL上面的webview如层
                         
@@ -221,7 +213,7 @@
                         UIView * view = self.ViewArr.lastObject;
                         [view removeFromSuperview];
                         [self.ViewArr removeLastObject];
-                                            }
+                    }
                 }
             }
             self.webView1 = self.ViewArr.lastObject;
@@ -232,7 +224,7 @@
                     if ([jsVal.toString isEqualToString:@"reload"]) {
                         [self.webView1 reload];
                     }else{
-
+                        
                         //不是空，则肯定，有值传过来要调用js的方法名
                         [self CallJsShow:jsVal.toString];
                     }
@@ -242,11 +234,7 @@
     };
     //注销账号
     context[@"cancel"] = ^(){
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
             [self.navigationController popToRootViewControllerAnimated:YES];
-        });
-        
     };
     context[@"about"] = ^(){
         NSLog(@"about");
@@ -265,12 +253,10 @@
     };
     //跳转到
     context[@"mail"] = ^(){
-        
         [self pushiMail];
     };
     //修改密码
     context[@"revisePassword"] = ^(){
-        
         dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"修改密码");
             UIStoryboard * sb = [UIStoryboard storyboardWithName:@"changePassword" bundle:nil];
@@ -278,11 +264,7 @@
             [self.navigationController pushViewController:vc animated:YES];
         });
     };
-    
-
-    
     NSString * currentURL = self.webView1.request.URL.absoluteString;
-    
     if ([currentURL isEqualToString:[[path UstringWithURL:nil]stringByAppendingString:@"/jsp/app/index.html"]]) {
         //获取当前页的titile
         self.title1.hidden = NO;
@@ -294,10 +276,6 @@
         
     }
 }
-
-
-
-
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
     UIAlertView *alter = [[UIAlertView alloc] initWithTitle:@"" message:@"网页加载失败！" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alter show];
@@ -310,7 +288,7 @@
 #pragma mark------菜单栏
 //弹出菜单栏
 - (IBAction)nottifi:(id)sender {
-//    [self about];
+    //    [self about];
     if (!self.count) {
         [self CallJsShow:@"showmenu()"];
         self.count = YES;
@@ -320,7 +298,6 @@
     }
 }
 -(void)pushiMail{
-  
     UIStoryboard * sb = [UIStoryboard storyboardWithName:@"mail" bundle:nil];
     EmailViewController * vc = [sb instantiateViewControllerWithIdentifier:@"email"];
     if (self.personData1 == nil) {
@@ -349,9 +326,9 @@
     NSLog(@"当前应用版本号码：%@",appCurVersionNum);
     //当前app版本号
     //获取后台的版本号
-            //表示已经是最新版本
-            UIAlertView *alter = [[UIAlertView alloc] initWithTitle:@"当前版本！" message:[NSString stringWithFormat:@"版本号:%@",appCurVersion]delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
-            [alter show];
+    //表示已经是最新版本
+    UIAlertView *alter = [[UIAlertView alloc] initWithTitle:@"当前版本！" message:[NSString stringWithFormat:@"版本号:%@",appCurVersion]delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
+    [alter show];
 }
 
 //关于
@@ -364,14 +341,12 @@
     });
     
 }
-
-
 //显示受页面
 -(void)pushPageWithURL:(NSString *)urlString{
     //跳转页面之前，先记录URL，self.URLArr跟self.ViewArr一一对应；
     
     //清空webVIew缓存数据
-//    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    //    [[NSURLCache sharedURLCache] removeAllCachedResponses];
     NSURL *url =[[NSURL alloc] initWithString:urlString];
     NSURLRequest * request = [NSURLRequest requestWithURL:url];
     [self.webView1 loadRequest:request];
@@ -415,7 +390,6 @@
     if (_ViewArr == nil) {
         _ViewArr = [NSMutableArray array];
     }
-    
     return _ViewArr;
 }
 

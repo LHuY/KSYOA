@@ -44,13 +44,13 @@
                 [section removeLastObject];
             }
             [section addObject:dic[@"deptName"]];
-
+            
             if (cell.count) {
                 [arrM1 addObject:cell];
-//                [cell  removeAllObjects];
+                //                [cell  removeAllObjects];
                 cell = [NSMutableArray array];
             }
-                        continue;
+            continue;
         }
         count = 0;
         [cell addObject:[personData personWithDict:dic]];

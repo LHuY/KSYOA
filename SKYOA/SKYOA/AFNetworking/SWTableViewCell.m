@@ -315,7 +315,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 - (void)scrollToCenter:(inout CGPoint *)targetContentOffset {
     targetContentOffset->x = [self leftUtilityButtonsWidth];
     _cellState = kCellStateCenter;
-
+    
     if ([_delegate respondsToSelector:@selector(swippableTableViewCell:scrollingToState:)]) {
         [_delegate swippableTableViewCell:self scrollingToState:kCellStateCenter];
     }

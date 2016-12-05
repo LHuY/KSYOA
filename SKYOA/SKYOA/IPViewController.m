@@ -40,9 +40,9 @@
         self.textFile3.text = @"oa";
     }else{
         //解密
-//        self.textFile1.text = [NSString base64Decode:dic[@"服务器"]];
-//        self.textFile2.text = [NSString base64Decode:dic[@"端口号"]];
-//        self.textFile3.text = [NSString base64Decode:dic[@"oa"]];
+        //        self.textFile1.text = [NSString base64Decode:dic[@"服务器"]];
+        //        self.textFile2.text = [NSString base64Decode:dic[@"端口号"]];
+        //        self.textFile3.text = [NSString base64Decode:dic[@"oa"]];
         self.textFile1.text = dic[@"服务器"];
         self.textFile2.text = dic[@"端口号"];
         self.textFile3.text = dic[@"oa"];
@@ -52,9 +52,9 @@
 - (IBAction)tureBnt:(id)sender {
     //加密
     
-//    [self.dic setValue:[NSString base64Encode:self.textFile1.text] forKey:@"服务器"];
-//    [self.dic setValue:[NSString base64Encode:self.textFile2.text] forKey:@"端口号"];
-//    [self.dic setValue:[NSString base64Encode:self.textFile3.text] forKey:@"oa"];
+    //    [self.dic setValue:[NSString base64Encode:self.textFile1.text] forKey:@"服务器"];
+    //    [self.dic setValue:[NSString base64Encode:self.textFile2.text] forKey:@"端口号"];
+    //    [self.dic setValue:[NSString base64Encode:self.textFile3.text] forKey:@"oa"];
     [self.dic setValue:self.textFile1.text forKey:@"服务器"];
     [self.dic setValue:self.textFile2.text forKey:@"端口号"];
     [self.dic setValue:self.textFile3.text forKey:@"oa"];
@@ -74,7 +74,6 @@
 }
 //跳转到跟控制器
 - (IBAction)PushViewController:(id)sender {
-    
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{

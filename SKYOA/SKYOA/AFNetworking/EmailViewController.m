@@ -86,15 +86,15 @@
 }
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-     [self btnOne];
+    [self btnOne];
     //每次pop回来的时候，让光标定位在收件箱中
 }
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-        self.friendTableView.alpha = 0;
-        [self.view addSubview:self.friendTableView];
-//    [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(TempMail) userInfo:nil repeats:YES];
-//    [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(sendMail) userInfo:nil repeats:YES];
+    self.friendTableView.alpha = 0;
+    [self.view addSubview:self.friendTableView];
+    //    [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(TempMail) userInfo:nil repeats:YES];
+    //    [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(sendMail) userInfo:nil repeats:YES];
     [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(QueryinBoxList) userInfo:nil repeats:YES];
 }
 - (void)viewDidLoad {
@@ -109,17 +109,17 @@
     UIButton * createEmail = [UIButton BarButtonItemWithTitle:@"创建" addImage:[UIImage imageNamed:@"set_up"]];
     [createEmail addTarget:self action:@selector(createEmail) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:createEmail];
-//为导航栏添加右侧按钮
+    //为导航栏添加右侧按钮
     
     self.navigationController.navigationBarHidden = NO;
     [self slideBnt];
-//    _collectionView.showsHorizontalScrollIndicator = NO;
+    //    _collectionView.showsHorizontalScrollIndicator = NO;
     _collectionView.pagingEnabled = YES;
     _collectionView.delegate = self;
     _collectionView.dataSource =self;
     [_collectionView registerNib:[UINib nibWithNibName:@"CustomCollectionViewCell"bundle:nil] forCellWithReuseIdentifier:@"CustomCollectionViewCell"];
     [self.view addSubview:_collectionView];
-
+    
     
     
     _arrIn = [NSMutableArray array];
@@ -130,12 +130,12 @@
     _searchArrIn = [NSMutableArray array];
     _searchArrSend = [NSMutableArray array];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-    //发件箱qingqiuu
-    [self TempMail];
-    //收件箱的请求
-    [self sendMail];
-    //草稿箱的请求
-    [self QueryinBoxList];
+        //发件箱qingqiuu
+        [self TempMail];
+        //收件箱的请求
+        [self sendMail];
+        //草稿箱的请求
+        [self QueryinBoxList];
     });
     //搜索部分
     self.view.backgroundColor = [UIColor whiteColor];
@@ -153,7 +153,7 @@
                 //说明请求错误；
                 return ;
             }
-
+            
             dispatch_async(dispatch_get_main_queue(), ^{
                 _arrSend = [data dataWithDic:result[@"data"]];
                 
@@ -166,7 +166,7 @@
             NSLog(@"失败%@",error);
         }];
     });
-
+    
 }
 //收件箱的请求
 -(void)QueryinBoxList{
@@ -178,11 +178,11 @@
                 BOOL status = [[result objectForKey:@"status"] boolValue];
                 if (!status) {
                     //说明请求错误；
-
+                    
                     
                     return ;
                 }
-
+                
                 _arrIn = [data dataWithDic:result[@"data"]];
                 
                 //搜索部分数据
@@ -193,9 +193,9 @@
         } failure:^(NSError *error) {
             NSLog(@"失败%@",error);
         }];
-
+        
     });
-    }
+}
 //草稿箱
 -(void)TempMail{
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
@@ -205,11 +205,11 @@
             BOOL status = [[result objectForKey:@"status"] boolValue];
             if (!status) {
                 //说明请求错误；
-
+                
                 
                 return ;
             }
-
+            
             dispatch_async(dispatch_get_main_queue(), ^{
                 _arrDraft = [data dataWithDic:result[@"data"]];
                 //搜索部分数据
@@ -222,9 +222,9 @@
         } failure:^(NSError *error) {
             NSLog(@"失败%@",error);
         }];
-
+        
     });
-   }
+}
 -(void)doBack{
     self.navigationController.navigationBarHidden = YES;
     [self.navigationController popViewControllerAnimated:YES];
@@ -239,17 +239,17 @@
 #pragma mark - Init
 - (void)initData {
     //获取收发件箱，草稿的索引
-        int count = _oldOffsetX/SCREEN_WIDTH;
-//    [self curPagData:count];
-     _searchDataSource = [NSMutableArray new];
+    int count = _oldOffsetX/SCREEN_WIDTH;
+    //    [self curPagData:count];
+    _searchDataSource = [NSMutableArray new];
     //获取当前页面的数据
     NSArray * arr =[self curPagData:count];
-
-        //获取索引的首字母
+    
+    //获取索引的首字母
     _indexDataSource = [ChineseString IndexArray:arr];
     
-////    对原数据进行排序重新分组
-
+    ////    对原数据进行排序重新分组
+    
     _allDataSource = [ChineseString LetterSortArray:arr];
 }
 //输入当前页面索引  ，返回当前页面数据
@@ -279,7 +279,7 @@
 #pragma mark - UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     if (!_isSearch) {
-       
+        
         return _indexDataSource.count;
     }else {
         return 1;
@@ -316,12 +316,12 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
     if (cell == nil) {
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
-//        cell.selectionStyle = UITableViewCellSelectionStyleGray;
+        //        cell.selectionStyle = UITableViewCellSelectionStyleGray;
     }
     if (!_isSearch) {
-//       对模型进行分解
+        //       对模型进行分解
         NSArray * resolve = [_allDataSource[indexPath.section][indexPath.row] componentsSeparatedByString:@"LhhY"];
-//        _allDataSource[indexPath.section][indexPath.row];
+        //        _allDataSource[indexPath.section][indexPath.row];
         cell.imageView.image = [UIImage imageNamed:@"logo"];
         cell.textLabel.text = resolve.firstObject;
         
@@ -338,24 +338,24 @@
     detailedMailViewController * VC = [SB  instantiateInitialViewController];
     if (self.Search) {
         //表示已经在编辑
-         int count = _oldOffsetX/SCREEN_WIDTH;
+        int count = _oldOffsetX/SCREEN_WIDTH;
         NSArray * arr =[self curPagData:count];
         
         for (NSString * str in arr) {
-                if ([str rangeOfString:_searchDataSource[indexPath.row]].location == NSNotFound) {
-//
-                }else{
-//                    NSLog(@"表示包含");
-                    NSArray * arr = [str componentsSeparatedByString:@"LhhY"];
-//                    NSLog(@"%@,~~%@",arr,arr.lastObject);
-                    VC.mail_ID = arr.lastObject;
-                }
+            if ([str rangeOfString:_searchDataSource[indexPath.row]].location == NSNotFound) {
+                //
+            }else{
+                //                    NSLog(@"表示包含");
+                NSArray * arr = [str componentsSeparatedByString:@"LhhY"];
+                //                    NSLog(@"%@,~~%@",arr,arr.lastObject);
+                VC.mail_ID = arr.lastObject;
+            }
             
         }
         
     }else{
-//        NSLog(@"没查询，直接点击");
-//        对模型进行分解
+        //        NSLog(@"没查询，直接点击");
+        //        对模型进行分解
         NSArray * resolve = [_allDataSource[indexPath.section][indexPath.row] componentsSeparatedByString:@"LhhY"];
         VC.mail_ID = resolve.lastObject;
     }
@@ -422,7 +422,7 @@
         NSLog(@"name = %d",count);
         [self.friendTableView reloadData];
         self.friendTableView.alpha = 1;
-//        self.navigationController.navigationBarHidden = YES;
+        //        self.navigationController.navigationBarHidden = YES;
         _searchBar.frame = CGRectMake(0, 42, SCREEN_WIDTH, 44);
         _searchBar.showsCancelButton = YES;
     }];
@@ -431,13 +431,13 @@
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
     //退出，没查询标识
     self.Search = NO;
-        [UIView animateWithDuration:0.3 animations:^{
-            int count = _oldOffsetX/SCREEN_WIDTH;
-            NSLog(@"name = %d",count);
-            self.friendTableView.alpha = 0;
-    _searchBar.frame = CGRectMake(0, 78, SCREEN_WIDTH, 44);
-    _searchBar.showsCancelButton = NO;
-        }];
+    [UIView animateWithDuration:0.3 animations:^{
+        int count = _oldOffsetX/SCREEN_WIDTH;
+        NSLog(@"name = %d",count);
+        self.friendTableView.alpha = 0;
+        _searchBar.frame = CGRectMake(0, 78, SCREEN_WIDTH, 44);
+        _searchBar.showsCancelButton = NO;
+    }];
     [_searchBar resignFirstResponder];
     _searchBar.text = @"";
     _isSearch = NO;
@@ -449,7 +449,7 @@
 //收发邮件按钮滑动
 -(void)slideBnt{
     UIView * btnBgView =[[UIView alloc]initWithFrame:CGRectMake(0, 20, SCREEN_WIDTH, 60)];
-//        btnBgView.backgroundColor = [UIColor redColor];
+    //        btnBgView.backgroundColor = [UIColor redColor];
     
     [self.view addSubview:btnBgView];
     UIButton * btn1 =[[UIButton alloc]initWithFrame:CGRectMake(0, 20, SCREEN_WIDTH/3.0, 44)];
@@ -478,7 +478,7 @@
     
     //滑动线
     UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 0, btn1.frame.size.width, 2)];
-        line.backgroundColor = [UIColor blueColor];
+    line.backgroundColor = [UIColor blueColor];
     [_scrollView addSubview:line];
     [btnBgView addSubview:_scrollView];
     UICollectionViewFlowLayout * layout = [[UICollectionViewFlowLayout alloc]init];
@@ -489,8 +489,8 @@
     layout.minimumLineSpacing = 0.0;
     _collectionView  = [[UICollectionView alloc]initWithFrame:CGRectMake(0,90, SCREEN_WIDTH, SCREEN_HEIGHT-140) collectionViewLayout:layout];
     _collectionView.frame = CGRectMake(0, 90, SCREEN_WIDTH, SCREEN_HEIGHT-120);
-//    [self.view addSubview:_collectionView];
-//    [self.view bringSubviewToFront:self.view1];
+    //    [self.view addSubview:_collectionView];
+    //    [self.view bringSubviewToFront:self.view1];
 }
 //收件按钮
 - (void)btnOne
@@ -504,12 +504,12 @@
     [self.activityIndicatorView startAnimating];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         //分线程做耗时操作 == 数据请求
-//        sleep(2);
+        //        sleep(2);
         dispatch_async(dispatch_get_main_queue(), ^{
             
             //回到主线程刷新UI
             
-//            cell.dataArray = [self curPagData:cellpath.row];
+            //            cell.dataArray = [self curPagData:cellpath.row];
             [self.CustomCollectionViewCell1.myTableView reloadData];
             [self.activityIndicatorView stopAnimating];
             
@@ -525,8 +525,8 @@
     if (_oldOffsetX == SCREEN_WIDTH) {
         return;
     }
-//    NSIndexPath * cellpath = [NSIndexPath indexPathForItem:(1) inSection:0];
-//    CustomCollectionViewCell *cell  =    (CustomCollectionViewCell *) [_collectionView  cellForItemAtIndexPath:cellpath];
+    //    NSIndexPath * cellpath = [NSIndexPath indexPathForItem:(1) inSection:0];
+    //    CustomCollectionViewCell *cell  =    (CustomCollectionViewCell *) [_collectionView  cellForItemAtIndexPath:cellpath];
     [_collectionView setContentOffset:CGPointMake(SCREEN_WIDTH, 0) animated:YES];
     
     [_scrollView setContentOffset:CGPointMake(-SCREEN_WIDTH/3.0, 0) animated:YES];
@@ -534,12 +534,12 @@
     [self.activityIndicatorView startAnimating];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         //分线程做耗时操作 == 数据请求
-//        sleep(2);
+        //        sleep(2);
         dispatch_async(dispatch_get_main_queue(), ^{
             
             //回到主线程刷新UI
             
-//            cell.dataArray = _allArray[cellpath.row] ;
+            //            cell.dataArray = _allArray[cellpath.row] ;
             [self.CustomCollectionViewCell2.myTableView reloadData];
             [self.activityIndicatorView stopAnimating];
             
@@ -554,8 +554,8 @@
     if (_oldOffsetX == SCREEN_WIDTH*2) {
         return;
     }
-//    NSIndexPath * cellpath = [NSIndexPath indexPathForItem:(2) inSection:0];
-//    CustomCollectionViewCell *cell  =    (CustomCollectionViewCell *) [_collectionView  cellForItemAtIndexPath:cellpath];
+    //    NSIndexPath * cellpath = [NSIndexPath indexPathForItem:(2) inSection:0];
+    //    CustomCollectionViewCell *cell  =    (CustomCollectionViewCell *) [_collectionView  cellForItemAtIndexPath:cellpath];
     [_collectionView setContentOffset:CGPointMake(SCREEN_WIDTH*2, 0) animated:YES];
     [_scrollView setContentOffset:CGPointMake(-SCREEN_WIDTH*2/3.0, 0) animated:YES];
     _oldOffsetX = SCREEN_WIDTH*2;
@@ -563,12 +563,12 @@
     
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         //分线程做耗时操作 == 数据请求
-//        sleep(2);
+        //        sleep(2);
         dispatch_async(dispatch_get_main_queue(), ^{
             
             //回到主线程刷新UI
             
-//            cell.dataArray = _allArray[cellpath.row] ;
+            //            cell.dataArray = _allArray[cellpath.row] ;
             [_CustomCollectionViewCell3.myTableView reloadData];
             [self.activityIndicatorView stopAnimating];
             

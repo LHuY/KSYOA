@@ -214,9 +214,9 @@
     //退出，没查询标识
     self.Search = NO;
     [UIView animateWithDuration:0.3 animations:^{
-    self.friendTableView.alpha = 0;
-    _searchBar.frame = CGRectMake(0, 64, kScreenWidth, 44);
-         }];
+        self.friendTableView.alpha = 0;
+        _searchBar.frame = CGRectMake(0, 64, kScreenWidth, 44);
+    }];
     self.navigationController.navigationBarHidden = NO;
     _searchBar.showsCancelButton = NO;
     [_searchBar resignFirstResponder];
@@ -256,7 +256,7 @@
 - (NSInteger )numberOfSectionForYUFoldingTableView:(YUFoldingTableView *)yuTableView
 {
     NSArray * array = self.arr.firstObject;
-
+    
     return array.count;
 }
 - (NSInteger )yuFoldingTableView:(YUFoldingTableView *)yuTableView numberOfRowsInSection:(NSInteger )section
@@ -286,7 +286,7 @@
     UITableViewCell *cell = [yuTableView dequeueReusableCellWithIdentifier:cellID];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
-       
+        
     }
     //每组的成员model
     NSArray * arr = self.arr.lastObject;
@@ -296,7 +296,7 @@
     NSLog(@"第%ld组，第%ld行",(long)indexPath.section,(long)indexPath.row);
     personData * model= arr1[indexPath.row];
     NSLog(@"要显示数据数组去的数据～～～～，～～%@",model.organName);
-
+    
     cell.textLabel.text = model.organName;
     
     return cell;
