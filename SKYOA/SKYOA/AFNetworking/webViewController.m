@@ -87,7 +87,6 @@
             BOOL status = [[result objectForKey:@"status"] boolValue];
             if (status) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    NSLog(@"%@",result[@"nextactors"]);
                     self.personData1 = [personData personWithArray:result[@"nextactors"]];
                 });
             }else{
@@ -97,6 +96,9 @@
         }];
     });
     
+}
+-(void)dealloc{
+    NSLog(@"释放");
 }
 - (IBAction)en:(id)sender {
     //    NSURL *URL = [[NSBundle mainBundle] URLForResource:@"sad" withExtension:@"doc"];
@@ -234,7 +236,10 @@
     };
     //注销账号
     context[@"cancel"] = ^(){
+        dispatch_async(dispatch_get_main_queue(), ^{
             [self.navigationController popToRootViewControllerAnimated:YES];
+        });
+        
     };
     context[@"about"] = ^(){
         NSLog(@"about");
@@ -253,10 +258,12 @@
     };
     //跳转到
     context[@"mail"] = ^(){
+        
         [self pushiMail];
     };
     //修改密码
     context[@"revisePassword"] = ^(){
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"修改密码");
             UIStoryboard * sb = [UIStoryboard storyboardWithName:@"changePassword" bundle:nil];
@@ -264,7 +271,11 @@
             [self.navigationController pushViewController:vc animated:YES];
         });
     };
+    
+    
+    
     NSString * currentURL = self.webView1.request.URL.absoluteString;
+    
     if ([currentURL isEqualToString:[[path UstringWithURL:nil]stringByAppendingString:@"/jsp/app/index.html"]]) {
         //获取当前页的titile
         self.title1.hidden = NO;
@@ -276,6 +287,10 @@
         
     }
 }
+
+
+
+
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
     UIAlertView *alter = [[UIAlertView alloc] initWithTitle:@"" message:@"网页加载失败！" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alter show];
@@ -298,6 +313,7 @@
     }
 }
 -(void)pushiMail{
+    
     UIStoryboard * sb = [UIStoryboard storyboardWithName:@"mail" bundle:nil];
     EmailViewController * vc = [sb instantiateViewControllerWithIdentifier:@"email"];
     if (self.personData1 == nil) {
@@ -341,6 +357,8 @@
     });
     
 }
+
+
 //显示受页面
 -(void)pushPageWithURL:(NSString *)urlString{
     //跳转页面之前，先记录URL，self.URLArr跟self.ViewArr一一对应；
@@ -390,6 +408,7 @@
     if (_ViewArr == nil) {
         _ViewArr = [NSMutableArray array];
     }
+    
     return _ViewArr;
 }
 

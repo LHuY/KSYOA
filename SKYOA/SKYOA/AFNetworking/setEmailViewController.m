@@ -219,6 +219,9 @@
     }
 
 }
+-(void)dealloc{
+    NSLog(@"~~释放");
+}
     //删除附件
 -(void)bnts:(UIButton *)btn{
    long int count = btn.tag - 1000;

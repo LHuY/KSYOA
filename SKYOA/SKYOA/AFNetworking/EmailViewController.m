@@ -66,6 +66,8 @@
 @property (strong, nonatomic) NSMutableArray *searchDataSource;/**<搜索结果数据源*/
 @property (strong, nonatomic) NSArray *indexDataSource;/**<索引数据源*/
 @property (assign, nonatomic) BOOL isSearch;
+//计时器
+@property (nonatomic, strong) NSTimer *time;
 
 @end
 
@@ -93,9 +95,10 @@
     [super viewDidAppear:animated];
     self.friendTableView.alpha = 0;
     [self.view addSubview:self.friendTableView];
-    //    [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(TempMail) userInfo:nil repeats:YES];
-    //    [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(sendMail) userInfo:nil repeats:YES];
-    [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(QueryinBoxList) userInfo:nil repeats:YES];
+    self.time = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(QueryinBoxList) userInfo:nil repeats:YES];
+}
+-(void)viewWillDisappear:(BOOL)animated{
+    [self.time invalidate];
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -228,8 +231,7 @@
 -(void)doBack{
     self.navigationController.navigationBarHidden = YES;
     [self.navigationController popViewControllerAnimated:YES];
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-    
+    self.searchArrDraft = nil;
 }
 
 -(void)dealloc{
@@ -396,14 +398,13 @@
         self.Search = YES;
     }
     [_searchDataSource removeAllObjects];
-    NSArray *ary = [NSArray new];
     int count = _oldOffsetX/SCREEN_WIDTH;
     NSMutableArray * arrM = [NSMutableArray array];
     for (NSString * str in [self curPagData:count]) {
         NSArray * arr = [str componentsSeparatedByString:@"LhhY"];
         [arrM addObject:arr.firstObject];
     }
-    ary = [ZYPinYinSearch searchWithOriginalArray:arrM andSearchText:searchText andSearchByPropertyName:@"name"];
+    NSArray *ary = [ZYPinYinSearch searchWithOriginalArray:arrM andSearchText:searchText andSearchByPropertyName:@"name"];
     if (searchText.length == 0) {
         _isSearch = NO;
         [_searchDataSource addObjectsFromArray:_allDataSource];

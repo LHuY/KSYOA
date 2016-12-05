@@ -173,7 +173,9 @@
     [tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:index] atScrollPosition:UITableViewScrollPositionTop animated:YES];
     return index;
 }
-
+-(void)dealloc{
+    NSLog(@"~~释放");
+}
 #pragma mark - UISearchBarDelegate
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     if ([searchText isEqualToString:@""]) {
@@ -188,8 +190,7 @@
     }
     
     [_searchDataSource removeAllObjects];
-    NSArray *ary = [NSArray new];
-    ary = [ZYPinYinSearch searchWithOriginalArray:_dataSource andSearchText:searchText andSearchByPropertyName:@"name"];
+    NSArray *ary= [ZYPinYinSearch searchWithOriginalArray:_dataSource andSearchText:searchText andSearchByPropertyName:@"name"];
     if (searchText.length == 0) {
         _isSearch = NO;
         [_searchDataSource addObjectsFromArray:_allDataSource];
@@ -224,16 +225,6 @@
     _isSearch = NO;
     [_friendTableView reloadData];
 }
-
-
-
-
-
-
-
-
-
-
 // 创建tableView
 - (void)setupFoldingTableView
 {

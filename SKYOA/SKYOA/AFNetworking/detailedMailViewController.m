@@ -88,6 +88,9 @@ static NSString *cellID=@"cellID";
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
     [self.navigationController popViewControllerAnimated:YES];
 }
+-(void)dealloc{
+     NSLog(@"~~释放");
+}
 //请求要显示详细信息数据
 -(void)showDataMail_ID:(NSString *)mail_ID{
     

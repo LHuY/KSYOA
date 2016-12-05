@@ -60,6 +60,9 @@
 -(BOOL)prefersStatusBarHidden{
     return YES;
 }
+-(void)dealloc{
+    NSLog(@"~~释放");
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.isTunch = NO;
