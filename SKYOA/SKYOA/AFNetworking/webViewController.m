@@ -47,6 +47,8 @@
 @property (nonatomic,strong)LXURLSessionTask *task;
 //文件路径
 @property (nonatomic, copy) NSString *Path;
+//记录一下版本更新URL
+@property (nonatomic, copy) NSString *VersionURL;
 @end
 
 @implementation webViewController
@@ -100,24 +102,6 @@
 -(void)dealloc{
     NSLog(@"释放");
 }
-- (IBAction)en:(id)sender {
-    //    NSURL *URL = [[NSBundle mainBundle] URLForResource:@"sad" withExtension:@"doc"];
-    //
-    //    if (URL) {
-    //        // Initialize Document Interaction Controller
-    //        self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:URL];
-    //
-    //        // Configure Document Interaction Controller
-    //        [self.documentInteractionController setDelegate:self];
-    //
-    //        // Preview PDF
-    //        [self.documentInteractionController presentPreviewAnimated:YES];
-    //    }
-    [self.webView reload];
-    
-}
-
-
 //返回
 - (IBAction)fanhui:(id)sender {
     if (self.ViewArr.count ==1) {
@@ -341,12 +325,32 @@
     NSString *appCurVersionNum = [infoDictionary objectForKey:@"CFBundleVersion"];
     NSLog(@"当前应用版本号码：%@",appCurVersionNum);
     //当前app版本号
-    //获取后台的版本号
-    //表示已经是最新版本
-    UIAlertView *alter = [[UIAlertView alloc] initWithTitle:@"当前版本！" message:[NSString stringWithFormat:@"版本号:%@",appCurVersion]delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
-    [alter show];
+    
+    [[KYNetManager sharedNetManager]POST:[[path UstringWithURL:nil]stringByAppendingString:[NSString stringWithFormat:@"/AppHttpService?method=QueryVersion&ver=%d&dev=ios",appCurVersion.intValue]] parameters:nil success:^(id result) {
+        NSLog(@"%@",result);
+        BOOL status = [[result objectForKey:@"status"] boolValue];
+        if (status) {
+            self.VersionURL = result[@"url"];
+            //获取后台的版本号
+            //表示已经是最新版本
+            UIAlertView *alter = [[UIAlertView alloc] initWithTitle:@"需要更新吗？" message:[NSString stringWithFormat:@"版本号:%@",appCurVersion]delegate:self cancelButtonTitle:@"下一次" otherButtonTitles:@"需要", nil];
+            [alter show];
+        }else{
+            UIAlertView *alter = [[UIAlertView alloc] initWithTitle:@"已经是最新版本" message:[NSString stringWithFormat:@"版本号:%@",appCurVersion]delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
+            [alter show];
+        }
+    } failure:^(NSError *error) {
+        
+    }];
+    
 }
-
+#pragma mark ---alertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex NS_DEPRECATED_IOS(2_0, 9_0){
+    if(buttonIndex == 1){
+        //说明要更新，需要跳转到链接去
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms://itunes.apple.com/us/app/hui-zhou-ji-shi-xue-yuan/id1163449554?mt=8"]];
+    }
+}
 //关于
 - (void)about{
     dispatch_async(dispatch_get_main_queue(), ^{

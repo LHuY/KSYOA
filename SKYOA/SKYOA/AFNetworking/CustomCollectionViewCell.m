@@ -56,7 +56,7 @@
         
         [rightUtilityButtons addUtilityButtonWithColor:
          [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f]
-                                                 title:@"Delete"];
+                                                 title:@"删除"];
         //        [rightUtilityButtons addUtilityButtonWithColor:
         //         [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0]
         //                                                 title:@"More"];

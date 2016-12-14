@@ -29,13 +29,13 @@
     NSMutableDictionary * dic = [[NSMutableDictionary alloc]initWithContentsOfFile:self.filePath];
     if (dic == nil ) {
         NSMutableDictionary* arrM = [NSMutableDictionary dictionary];
-        [arrM setObject:@"http://oa.hzti.net" forKey:@"服务器"];
+        [arrM setObject:@"oa.hzti.net" forKey:@"服务器"];
         [arrM setObject:@"7001" forKey:@"端口号"];
         [arrM setObject:@"oa" forKey:@"oa"];
         [arrM setObject:@"" forKey:@"密码"];
         [arrM setObject:@"" forKey:@"用户名"];
         [arrM writeToFile:self.filePath atomically:YES];
-        self.textFile1.text = @"http://oa.hzti.net";
+        self.textFile1.text = @"oa.hzti.net";
         self.textFile2.text = @"7001" ;
         self.textFile3.text = @"oa";
     }else{
