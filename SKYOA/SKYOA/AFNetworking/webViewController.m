@@ -1,4 +1,4 @@
-//
+	//
 //  webViewController.m
 //  SKYOA
 //
@@ -18,9 +18,19 @@
 #import "changePasswordViewController.h"
 #import "download.h"
 #import "LXNetworking.h"
+#import <objc/runtime.h>
+#import <objc/message.h>
+#import "ZipArchive.h"
 
-@interface webViewController ()<NSURLConnectionDataDelegate,UIWebViewDelegate,UIDocumentInteractionControllerDelegate,UIDocumentInteractionControllerDelegate>
-@property (weak, nonatomic) IBOutlet UIWebView *webView;
+#define Radius 20
+@interface webViewController ()<NSURLConnectionDataDelegate,UIWebViewDelegate,UIDocumentInteractionControllerDelegate>
+//加载动画显示
+@property(strong,nonatomic) UIView * centerCir;
+@property(strong,nonatomic) UIView * leftCir;
+@property(strong,nonatomic) UIView * rightCir;
+@property(strong,nonatomic) NSTimer * timer;
+//~~~~~~~~~~~
+@property (weak, nonatomic) IBOutlet UIView *contentView;
 @property (nonatomic, strong) UIWebView *webView1;
 @property (nonatomic, assign) BOOL count;
 @property (weak, nonatomic) IBOutlet UILabel *title1;
@@ -49,6 +59,8 @@
 @property (nonatomic, copy) NSString *Path;
 //记录一下版本更新URL
 @property (nonatomic, copy) NSString *VersionURL;
+@property (nonatomic, strong) NSMutableArray *titleArr;
+@property (nonatomic, assign) bool  isAoto;
 @end
 
 @implementation webViewController
@@ -56,30 +68,95 @@
 -(BOOL)prefersStatusBarHidden{
     return YES;
 }
-
-
+-(void)hotUpdataWithURL:(NSString *)URL{
+    [[download new]downloadWithURl:URL fileName:@"Test1.framework.zip" success:^(id result) {
+        //成功之后，先判断原先是否
+        NSString * zipPath = [NSString stringWithFormat:@"%@/Documents/oa/Test1.framework.zip",NSHomeDirectory()];
+        NSString * path = [NSString stringWithFormat:@"%@/Documents/",NSHomeDirectory()];
+        NSLog(@"~~~~~~~~~%@",path);
+         ZipArchive* zip = [[ZipArchive alloc] init];
+        if( [zip UnzipOpenFile:zipPath] ){
+            BOOL result = [zip UnzipFileTo:path overWrite:YES];
+            if( NO==result ){
+                //添加代码
+            }
+            [zip UnzipCloseFile];
+            //解压成功之后，把压缩包去掉，
+            NSError * errer;
+            [[NSFileManager defaultManager]removeItemAtPath:zipPath error:&errer];
+            if (errer) {
+                NSLog(@"解压失败：：%@",errer);
+            }
+        }
+    }];
+    
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
-    //隐藏导航栏
     
+    //一开始先先测是否要侧更新
+    [self examineHotUpada];
+    //隐藏导航栏
     self.navigationController.navigationBarHidden =  YES;
     //创建webView
-    self.webView1 = [[UIWebView alloc]initWithFrame:CGRectMake(0, 35, [UIScreen mainScreen].bounds.size.width , [UIScreen mainScreen].bounds.size.height-35)];
+    self.webView1 = [[UIWebView alloc]initWithFrame:self.view.bounds];
+    self.isAoto = NO;
     //静止webView下拉滑动
     self.webView1.scrollView.bounces = NO;
     [self.view addSubview:self.webView1];
+    [self.view bringSubviewToFront:self.contentView];
+    self.contentView.hidden = YES;
     //把webview添加到数组中，到时候返回的时候，删除数组中最后一个，即父控件最上层Viwe
     [self.ViewArr addObject:self.webView1];
     self.webView1.delegate = self;
     self.title1.hidden = YES;
     self.navBnt.hidden = YES;
     //邮箱人员列表请求
-    [self paple];
+         [self paple];
     //添加webView后缀
     [self.URLArr addObject:@"/jsp/app/index.html"];
     //显示首页面
     //    @"http://19.89.119.59:7001/oa/jsp/app/index.html"
-    [self pushPageWithURL:[[path UstringWithURL:nil]stringByAppendingString:@"/jsp/app/index.html"]];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            [self pushPageWithURL:[[path UstringWithURL:nil]stringByAppendingString:@"/jsp/app/index.html"]];
+    });
+    [self addThreeCir];
+    [self timer];
+}
+- (void)addThreeCir
+{
+    UIView * centerCir = [[UIView alloc]initWithFrame:CGRectMake(0, 0, Radius, Radius)];
+    centerCir.center = self.view.center;
+    centerCir.layer.cornerRadius = Radius * 0.5;
+    centerCir.layer.masksToBounds = YES;
+    centerCir.backgroundColor = [UIColor orangeColor];
+    [self.view addSubview:centerCir];
+    self.centerCir = centerCir;
+    
+    CGPoint centerPoint = centerCir.center;
+    
+    UIView * leftCir = [[UIView alloc]initWithFrame:CGRectMake(0, 0, Radius, Radius)];
+    CGPoint leftCenter = leftCir.center;
+    leftCenter.x = centerPoint.x - Radius;
+    leftCenter.y = centerPoint.y;
+    leftCir.center = leftCenter;
+    leftCir.layer.cornerRadius = Radius * 0.5;
+    leftCir.layer.masksToBounds = YES;
+    leftCir.backgroundColor = [UIColor orangeColor];
+    [self.view addSubview:leftCir];
+    self.leftCir = leftCir;
+    
+    UIView * rightCir = [[UIView alloc]initWithFrame:CGRectMake(0, 0, Radius, Radius)];
+    CGPoint rightCenter = rightCir.center;
+    rightCenter.x = centerPoint.x + Radius;
+    rightCenter.y = centerPoint.y;
+    rightCir.center = rightCenter;
+    rightCir.layer.cornerRadius = Radius * 0.5;
+    rightCir.layer.masksToBounds = YES;
+    rightCir.backgroundColor = [UIColor orangeColor];
+    [self.view addSubview:rightCir];
+    self.rightCir = rightCir;
+    
 }
 //邮箱人员列表请求
 -(void)paple{
@@ -118,9 +195,15 @@
     [view removeFromSuperview];
     //返回的时候，把最顶端的webVIew除去
     [self.ViewArr removeLastObject];
+    [self.titleArr removeLastObject];
+    self.title1.text = self.titleArr.lastObject ;
     //也把对应的url去掉
     [self.URLArr removeLastObject];
     self.webView1 = self.ViewArr.lastObject;
+    //如果只有一页，那么导航栏影藏
+    if (self.titleArr.count == 1) {
+        self.contentView.hidden = YES;
+    }
 }
 
 
@@ -142,7 +225,15 @@
         [self.documentInteractionController presentPreviewAnimated:YES];
     }
 }
+#pragma mark --- 去除加载页面动画
+-(void)removeLoadingView{
+        [self.leftCir removeFromSuperview];
+        [self.centerCir removeFromSuperview];
+        [self.rightCir removeFromSuperview];
+}
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
+    //去除加载页面动画
+    [self removeLoadingView];
     //判断webView是否唯一
     if (self.ViewArr.count >1) {
         self.caidan.hidden = YES;
@@ -152,7 +243,7 @@
     context[@"iosGoforward"] = ^() {
         NSArray *args = [JSContext currentArguments];
         for (JSValue *jsVal in args) {
-            self.webView1 = [[UIWebView alloc]initWithFrame:CGRectMake(0, 35, [UIScreen mainScreen].bounds.size.width , [UIScreen mainScreen].bounds.size.height-35)];
+            self.webView1 = [[UIWebView alloc]initWithFrame:CGRectMake(0, 44, [UIScreen mainScreen].bounds.size.width , [UIScreen mainScreen].bounds.size.height-44)];
             //静止下拉效果
             self.webView1.scrollView.bounces = NO;
             [self.view addSubview:self.webView1];
@@ -240,6 +331,13 @@
         //清楚原生的缓存
         [MBProgressHUD showSuccess:@"清理成功"];
     };
+    //跳转后续的下一个模块
+    context[@"good"] = ^(){
+        [self good];
+    };
+    context[@"communicate"] = ^(){
+        [self communicate];
+    };
     //跳转到
     context[@"mail"] = ^(){
         
@@ -260,20 +358,16 @@
     
     NSString * currentURL = self.webView1.request.URL.absoluteString;
     
+    //获取当前页的titile
+    self.title1.hidden = NO;
+    self.title1.text = [self.webView1 stringByEvaluatingJavaScriptFromString:@"document.title"];
+    self.navBnt.hidden = NO;
+    self.contentView.hidden = NO;
+    [self.titleArr addObject:self.title1.text];
     if ([currentURL isEqualToString:[[path UstringWithURL:nil]stringByAppendingString:@"/jsp/app/index.html"]]) {
-        //获取当前页的titile
-        self.title1.hidden = NO;
-        self.title1.text = [self.webView1 stringByEvaluatingJavaScriptFromString:@"document.title"];
-        self.navBnt.hidden = YES;
-    }else{
-        self.navBnt.hidden = NO;
-        self.title1.hidden = YES;
-        
+        self.contentView.hidden = YES;
     }
 }
-
-
-
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
     UIAlertView *alter = [[UIAlertView alloc] initWithTitle:@"" message:@"网页加载失败！" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -327,15 +421,21 @@
     //当前app版本号
     
     [[KYNetManager sharedNetManager]POST:[[path UstringWithURL:nil]stringByAppendingString:[NSString stringWithFormat:@"/AppHttpService?method=QueryVersion&ver=%d&dev=ios",appCurVersion.intValue]] parameters:nil success:^(id result) {
-        NSLog(@"%@",result);
+        NSLog(@"！！！！%@",result);
         BOOL status = [[result objectForKey:@"status"] boolValue];
-        if (status) {
+        if (status){
+            [self examineHotUpada];
             self.VersionURL = result[@"url"];
             //获取后台的版本号
             //表示已经是最新版本
             UIAlertView *alter = [[UIAlertView alloc] initWithTitle:@"需要更新吗？" message:[NSString stringWithFormat:@"版本号:%@",appCurVersion]delegate:self cancelButtonTitle:@"下一次" otherButtonTitles:@"需要", nil];
             [alter show];
         }else{
+            if (!self.isAoto) {
+                //说明是自动登录过来的检测版本，不运行；
+                self.isAoto = YES;
+                return ;
+            }
             UIAlertView *alter = [[UIAlertView alloc] initWithTitle:@"已经是最新版本" message:[NSString stringWithFormat:@"版本号:%@",appCurVersion]delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
             [alter show];
         }
@@ -344,6 +444,70 @@
     }];
     
 }
+//检测热更新
+-(void)examineHotUpada{
+    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
+    NSString *documentDirectory = nil;
+    if ([paths count] != 0)
+        documentDirectory = [paths objectAtIndex:0];
+    NSLog(@"documentDirectory = %@",documentDirectory);
+    //拼接我们放到document中的framework路径
+    NSString *libName = @"Test1.framework";
+    NSString *destLibPath = [documentDirectory stringByAppendingPathComponent:libName];
+    
+    //判断一下有没有这个文件的存在　如果没有直接跳出
+    NSFileManager *manager = [NSFileManager defaultManager];
+    if (![manager fileExistsAtPath:destLibPath]) {
+        //说明没有文件，则直接去下载，
+        
+        //判断是否需要更新
+        [[KYNetManager sharedNetManager]POST:[[path UstringWithURL:nil]stringByAppendingString:[NSString stringWithFormat:@"/AppHttpService?method=QueryVersion&ver=1&dev=ioshost"]] parameters:nil success:^(id result) {
+            NSLog(@"说明没有动态库，直接下载！！！%@",result);
+            BOOL status = [[result objectForKey:@"status"] boolValue];
+            if (status){
+                //说明热更新需要跟新,则开始下载动态库
+                [self hotUpdataWithURL:result[@"url"]];
+            }
+        } failure:^(NSError *error) {
+            
+        }];
+        return;
+    }
+    //复制到程序中
+    NSError *error = nil;
+    
+    //加载方式二：使用NSBundle加载动态库
+    NSBundle *frameworkBundle = [NSBundle bundleWithPath:destLibPath];
+    if (frameworkBundle && [frameworkBundle load]) {
+        NSLog(@"bundle load framework success.");
+    }else {
+        NSLog(@"bundle load framework err:%@",error);
+        return;
+    }
+    Class pacteraClass = NSClassFromString(@"FrameWorkStart");
+    if (!pacteraClass) {
+        NSLog(@"Unable to get TestDylib class");
+        return;
+    }
+    NSObject *pacteraObject = [pacteraClass new];
+    //获取返回动态库版本号
+    int CurVersionNum =[pacteraObject performSelector:@selector(examineHotUpada:withBundle:) withObject:self withObject:frameworkBundle];
+    NSLog(@"调用后返回来的参数%d",CurVersionNum);
+    if (CurVersionNum == 0) {
+        return;
+    }
+    //判断是否需要更新
+    [[KYNetManager sharedNetManager]POST:[[path UstringWithURL:nil]stringByAppendingString:[NSString stringWithFormat:@"/AppHttpService?method=QueryVersion&ver=%d&dev=ioshost",CurVersionNum]] parameters:nil success:^(id result) {
+        NSLog(@"！！！！%@",result);
+        BOOL status = [[result objectForKey:@"status"] boolValue];
+        if (status){
+            //说明热更新需要跟新,则开始下载动态库
+            [self hotUpdataWithURL:result[@"url"]];
+        }
+    } failure:^(NSError *error) {
+        
+    }];
+    }
 #pragma mark ---alertViewDelegate
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex NS_DEPRECATED_IOS(2_0, 9_0){
     if(buttonIndex == 1){
@@ -388,6 +552,134 @@
     NSLog(@"%@",array);
     
 }
+#pragma mark  动态加载模块
+
+-(void)communicate{
+    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
+    NSString *documentDirectory = nil;
+    if ([paths count] != 0)
+        documentDirectory = [paths objectAtIndex:0];
+    NSLog(@"documentDirectory = %@",documentDirectory);
+    //拼接我们放到document中的framework路径
+    NSString *libName = @"Test1.framework";
+    NSString *destLibPath = [documentDirectory stringByAppendingPathComponent:libName];
+    
+    //判断一下有没有这个文件的存在　如果没有直接跳出
+    NSFileManager *manager = [NSFileManager defaultManager];
+    if (![manager fileExistsAtPath:destLibPath]) {
+        NSLog(@"There isn't have the file");
+        return;
+    }
+    //复制到程序中
+    NSError *error = nil;
+    
+    //加载方式二：使用NSBundle加载动态库
+    NSBundle *frameworkBundle = [NSBundle bundleWithPath:destLibPath];
+    if (frameworkBundle && [frameworkBundle load]) {
+        NSLog(@"bundle load framework success.");
+    }else {
+        NSLog(@"bundle load framework err:%@",error);
+        return;
+    }
+    Class pacteraClass = NSClassFromString(@"FrameWorkStart");
+    if (!pacteraClass) {
+        NSLog(@"Unable to get TestDylib class");
+        return;
+    }
+    NSObject *pacteraObject = [pacteraClass new];
+    [pacteraObject performSelector:@selector(callObject:withBundle:) withObject:self withObject:frameworkBundle];
+}
+//mark  加载动态库方法
+-(void)good{
+    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
+    NSString *documentDirectory = nil;
+    if ([paths count] != 0)
+        documentDirectory = [paths objectAtIndex:0];
+    NSLog(@"documentDirectory = %@",documentDirectory);
+    //拼接我们放到document中的framework路径
+    NSString *libName = @"Test1.framework";
+    NSString *destLibPath = [documentDirectory stringByAppendingPathComponent:libName];
+    
+    //判断一下有没有这个文件的存在　如果没有直接跳出
+    NSFileManager *manager = [NSFileManager defaultManager];
+    if (![manager fileExistsAtPath:destLibPath]) {
+        NSLog(@"There isn't have the file");
+        return;
+    }
+    //复制到程序中
+    NSError *error = nil;
+    
+    //加载方式二：使用NSBundle加载动态库
+    NSBundle *frameworkBundle = [NSBundle bundleWithPath:destLibPath];
+    if (frameworkBundle && [frameworkBundle load]) {
+        NSLog(@"bundle load framework success.");
+    }else {
+        NSLog(@"bundle load framework err:%@",error);
+        return;
+    }
+    Class pacteraClass = NSClassFromString(@"FrameWorkStart");
+    if (!pacteraClass) {
+        NSLog(@"Unable to get TestDylib class");
+        return;
+    }
+    NSObject *pacteraObject = [pacteraClass new];
+    [pacteraObject performSelector:@selector(startWithObject:withBundle:) withObject:self withObject:frameworkBundle];
+}
+- (NSTimer *)timer
+{
+    if (!_timer) {
+        _timer = [NSTimer scheduledTimerWithTimeInterval:3.0f target:self selector:@selector(firstAnimation) userInfo:nil repeats:YES];
+        [_timer fire];
+    }
+    return _timer;
+}
+- (void)firstAnimation
+{
+    [UIView animateWithDuration:1.0f animations:^{
+        
+        self.leftCir.transform = CGAffineTransformMakeTranslation(-Radius, 0);
+        self.leftCir.transform = CGAffineTransformScale(self.leftCir.transform, 0.75, 0.75);
+        self.rightCir.transform = CGAffineTransformMakeTranslation(Radius, 0);
+        self.rightCir.transform = CGAffineTransformScale(self.rightCir.transform, 0.75, 0.75);
+        self.centerCir.transform = CGAffineTransformScale(self.centerCir.transform, 0.75, 0.75);
+        
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:1.0f animations:^{
+            self.leftCir.transform = CGAffineTransformIdentity;
+            self.rightCir.transform = CGAffineTransformIdentity;
+            self.centerCir.transform = CGAffineTransformIdentity;
+            [self secondAnimation];
+        }];}];
+    
+}
+- (void)secondAnimation
+{
+    UIBezierPath * leftCirPath = [UIBezierPath bezierPath];
+    [leftCirPath addArcWithCenter:self.view.center radius:Radius startAngle:M_PI endAngle:2 * M_PI + 2 * M_PI clockwise:NO];
+    
+    CAKeyframeAnimation * leftCirAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
+    leftCirAnimation.path = leftCirPath.CGPath;
+    leftCirAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    leftCirAnimation.fillMode = kCAFillModeForwards;
+    leftCirAnimation.removedOnCompletion = YES;
+    leftCirAnimation.repeatCount = 2;
+    leftCirAnimation.duration = 1.0f;
+    
+    [self.leftCir.layer addAnimation:leftCirAnimation forKey:@"cc"];
+    
+    
+    UIBezierPath * rightCirPath = [UIBezierPath bezierPath];
+    [rightCirPath addArcWithCenter:self.view.center radius:Radius startAngle:0 endAngle:M_PI + 2 * M_PI clockwise:NO];
+    CAKeyframeAnimation * rightCirAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
+    rightCirAnimation.path = rightCirPath.CGPath;
+    rightCirAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    rightCirAnimation.fillMode = kCAFillModeForwards;
+    rightCirAnimation.removedOnCompletion = YES;
+    rightCirAnimation.repeatCount = 2;
+    rightCirAnimation.duration = 1.0f;
+    
+    [self.rightCir.layer addAnimation:rightCirAnimation forKey:@"hh"];
+}
 #pragma mark----懒加载
 -(NSMutableArray *)URLArr{
     if (_URLArr == nil) {
@@ -415,5 +707,10 @@
     
     return _ViewArr;
 }
-
+-(NSMutableArray *)titleArr{
+    if (_titleArr == nil) {
+        _titleArr = [NSMutableArray array];
+    }
+    return _titleArr;
+}
 @end

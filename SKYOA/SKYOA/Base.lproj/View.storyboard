@@ -1,26 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="lup-G7-keR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
     </dependencies>
     <scenes>
-        <!--Navigation Controller-->
-        <scene sceneID="ABQ-oF-rQV">
-            <objects>
-                <navigationController id="lup-G7-keR" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ViR-pB-qbS">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="KLr-6v-sdw"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ApV-s3-YKb" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-2872" y="175"/>
-        </scene>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -33,27 +17,24 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bluebg1" translatesAutoresizingMaskIntoConstraints="NO" id="UkM-w0-zdL">
-                                <rect key="frame" x="0.0" y="0.0" width="480" height="800"/>
-                            </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="loginadmin" translatesAutoresizingMaskIntoConstraints="NO" id="SdQ-TW-fRh">
-                                <rect key="frame" x="64" y="231" width="287" height="45"/>
+                                <rect key="frame" x="64" y="187" width="287" height="45"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="287" id="IlP-42-0gV"/>
                                     <constraint firstAttribute="height" constant="45" id="uyq-W9-2ZF"/>
                                 </constraints>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="loginpwd" translatesAutoresizingMaskIntoConstraints="NO" id="6Lo-2u-coQ">
-                                <rect key="frame" x="64" y="292" width="287" height="44"/>
+                                <rect key="frame" x="64" y="248" width="287" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="287" id="1Cq-ia-wQH"/>
                                     <constraint firstAttribute="height" constant="44" id="uvF-ts-Dp1"/>
                                 </constraints>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JoB-uf-EYa">
-                                <rect key="frame" x="64" y="344" width="287" height="31"/>
+                                <rect key="frame" x="64" y="300" width="287" height="31"/>
                                 <subviews>
-                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OOf-cL-y6a">
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="OOf-cL-y6a">
                                         <rect key="frame" x="24" y="2" width="42" height="28"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="28" id="d0T-Qj-NRk"/>
@@ -103,7 +84,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G4B-Ae-Dfs">
-                                <rect key="frame" x="64" y="231" width="287" height="45"/>
+                                <rect key="frame" x="64" y="187" width="287" height="45"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eMc-RQ-YUP">
                                         <rect key="frame" x="68" y="7" width="200" height="31"/>
@@ -124,7 +105,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DMl-3L-sTN">
-                                <rect key="frame" x="64" y="292" width="287" height="45"/>
+                                <rect key="frame" x="64" y="248" width="287" height="45"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bAd-3s-PRA">
                                         <rect key="frame" x="68" y="7" width="200" height="31"/>
@@ -146,7 +127,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cpn-QB-gb4">
-                                <rect key="frame" x="78" y="423" width="258" height="38"/>
+                                <rect key="frame" x="78" y="379" width="258" height="38"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="38" id="qpc-4n-pfx"/>
                                     <constraint firstAttribute="width" constant="258" id="sH1-xr-0Mr"/>
@@ -157,7 +138,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pcV-Kq-KtF" customClass="CircleView">
-                                <rect key="frame" x="142" y="96" width="130" height="130"/>
+                                <rect key="frame" x="142" y="52" width="130" height="130"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="130" id="ULz-iA-3Zf"/>
@@ -165,11 +146,14 @@
                                 </constraints>
                             </view>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="hclogo" translatesAutoresizingMaskIntoConstraints="NO" id="ESn-Qn-28o">
-                                <rect key="frame" x="146" y="100" width="123" height="123"/>
+                                <rect key="frame" x="146" y="56" width="123" height="123"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="123" id="Pic-Wu-XQI"/>
                                     <constraint firstAttribute="height" constant="123" id="ijD-5t-vw0"/>
                                 </constraints>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bluebg1" translatesAutoresizingMaskIntoConstraints="NO" id="UkM-w0-zdL">
+                                <rect key="frame" x="0.0" y="0.0" width="480" height="800"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -202,7 +186,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2048.8000000000002" y="191.1544227886057"/>
+            <point key="canvasLocation" x="-2295" y="91"/>
         </scene>
     </scenes>
     <resources>

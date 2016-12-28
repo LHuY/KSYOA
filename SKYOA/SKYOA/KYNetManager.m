@@ -25,14 +25,12 @@
         
         instance = [[self alloc] init];
         instance.manager = [[AFHTTPSessionManager alloc] initWithBaseURL:KYBaseURL sessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
-        
+        instance.manager.requestSerializer.timeoutInterval = 10;
         instance.manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript",@"text/html", @"text/plain", nil];
         //由于服务器方面需要json参数，故需要这行代码
         instance.manager.requestSerializer = [AFJSONRequestSerializer serializer];
         
     });
-    
-    
     return instance;
 }
 
@@ -40,11 +38,11 @@
 - (AFSecurityPolicy*)customSecurityPolicy
 {
     // /先导入证书
-    NSString *cerPath = [[NSBundle mainBundle] pathForResource:@"clientSSL.cer" ofType:@""];//证书的路径
+    NSString *cerPath = [[NSBundle mainBundle] pathForResource:@"clientSSL" ofType:@"cer"];//证书的路径
     NSData *certData = [NSData dataWithContentsOfFile:cerPath];
-
+    
     // AFSSLPinningModeCertificate 使用证书验证模式
-    AFSecurityPolicy *securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModePublicKey];
+    AFSecurityPolicy *securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
     
     // allowInvalidCertificates 是否允许无效证书（也就是自建的证书），默认为NO
     // 如果是需要验证自建证书，需要设置为YES
@@ -57,12 +55,12 @@
     securityPolicy.validatesDomainName = NO;
     
     
-    securityPolicy.pinnedCertificates = [NSSet setWithObject:certData];
+    securityPolicy.pinnedCertificates = [[NSSet alloc]initWithObjects:certData, nil];
     
     return securityPolicy;
 }
 - (void)GET:(NSString *)URLString parameters:(id)parameters success:(void (^)(id result))success failure:(void (^)(NSError *error))failure{
-//    self.manager.securityPolicy = [self customSecurityPolicy];
+    self.manager.securityPolicy = [self customSecurityPolicy];
     [self.manager GET:URLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         success(responseObject);
         
@@ -74,7 +72,7 @@
 
 
 - (void)POST:(NSString *)URLString parameters:(id)parameters success:(void (^)(id result))success failure:(void (^)(NSError *error))failure{
-//    self.manager.securityPolicy = [self customSecurityPolicy];
+    self.manager.securityPolicy = [self customSecurityPolicy];
 //    NSString *cerPath = [[NSBundle mainBundle] pathForResource:@"text" ofType:@"cer"];
 //    NSData * certData =[NSData dataWithContentsOfFile:cerPath];
 //    NSSet * certSet = [[NSSet alloc] initWithObjects:certData, nil];

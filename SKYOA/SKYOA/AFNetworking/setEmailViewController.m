@@ -169,6 +169,10 @@
         }
 
     }else{
+//        if (!self.attachmentArr.count) {
+//            [MBProgressHUD showError:@"没有站内文件"];
+//            return;
+//        }
         self.isTunch = YES;
         self.name =nil;
         [self.attachmentBtn setTitle:@"确定" forState:UIControlStateNormal];
@@ -451,29 +455,40 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             //        NSArray * arr = [data dataWithDic:result[@"data"]];
             //        data * data1 = arr.lastObject;
-
-            if (self.tempMail) {
-                //这个赋值，是给CustomCollectionViewCell中的删除功能删除草稿箱对应的文件
-                self.tempMail();
-            }
-            if (self.blockName) {
-                self.blockName(@"1");
-            }
-            NSArray * controllers = self.navigationController.viewControllers;
-            [self.navigationController popToViewController:controllers[2]  animated:YES];
+            UIImage * image = [UIImage imageNamed:@"airplane.png"];
+            UIImageView * imageView = [[UIImageView alloc]initWithFrame:CGRectMake(self.view.frame.size.width/2-60, self.view.frame.size.height/2-60, 60, 60)];
+            imageView.image = image;
+            [self.view addSubview:imageView];
+            [UIView animateWithDuration:1.2 animations:^{
+                imageView.transform = CGAffineTransformTranslate(imageView.transform, self.view.frame.size.width*0.7, -100);
+            }];
+//            image.
+           
+            [self performSelector:@selector(sendSuccess) withObject:nil afterDelay:1.1];
+            [self performSelector:@selector(pushEmail) withObject:nil afterDelay:1.6];
+            
 
         });
     } failure:^(NSError *error) {
         [MBProgressHUD showError:@"发送文件失败，稍后再试"];
     }];
-        
-        
-        
-        
-        
         NSLog(@"!!!!!!!%@",[NSString stringWithFormat:@"%@/%@",self.filePath,self.didSelectArr.lastObject]);
     });
     }
+-(void)sendSuccess{
+     [MBProgressHUD showSuccess:@"发送成功"];
+}
+-(void)pushEmail{
+    if (self.tempMail) {
+        //这个赋值，是给CustomCollectionViewCell中的删除功能删除草稿箱对应的文件
+        self.tempMail();
+    }
+    if (self.blockName) {
+        self.blockName(@"1");
+    }
+    NSArray * controllers = self.navigationController.viewControllers;
+    [self.navigationController popToViewController:controllers[2]  animated:YES];
+}
 -(void)showSuccess{
     [MBProgressHUD showSuccess:@"文件发送成功"];
 }

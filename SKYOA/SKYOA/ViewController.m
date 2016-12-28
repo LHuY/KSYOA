@@ -16,11 +16,8 @@
 #import "MBProgressHUD+PKX.h"
 #import "AFNetworking.h"
 #import "NSString+base64.h"
-
-
-//#import <AFNetworking/>
-
-//#import "NSString+base64.h"
+#import "path.h"
+#import "download.h"
 
 @interface ViewController ()
 //用户名
@@ -34,29 +31,88 @@
 @property (nonatomic, copy) NSString *filePath;
 @property (nonatomic, strong) NSMutableDictionary *dic;
 @property (nonatomic, strong) UINavigationController *nav;
+@property (nonatomic, copy) NSString *VersionURL;
+@property (nonatomic, strong) UIView *View1;
 @end
 
 @implementation ViewController
+////mark  热更新
+- (IBAction)hotUpdata:(id)sender {
+    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
+    NSString *documentDirectory = nil;
+    if ([paths count] != 0)
+        documentDirectory = [paths objectAtIndex:0];
+    NSLog(@"documentDirectory = %@",documentDirectory);
+    //拼接我们放到document中的framework路径
+    NSString *libName = @"Test1.framework";
+    NSString *destLibPath = [documentDirectory stringByAppendingPathComponent:libName];
+    
+    //判断一下有没有这个文件的存在　如果没有直接跳出
+    NSFileManager *manager = [NSFileManager defaultManager];
+    if (![manager fileExistsAtPath:destLibPath]) {
+        NSLog(@"There isn't have the file");
+        return;
+    }
+    //复制到程序中
+    NSError *error = nil;
+    
+    //加载方式二：使用NSBundle加载动态库
+    NSBundle *frameworkBundle = [NSBundle bundleWithPath:destLibPath];
+    if (frameworkBundle && [frameworkBundle load]) {
+        NSLog(@"bundle load framework success.");
+    }else {
+        NSLog(@"bundle load framework err:%@",error);
+        return;
+    }
+    Class pacteraClass = NSClassFromString(@"FrameWorkStart");
+    if (!pacteraClass) {
+        NSLog(@"Unable to get TestDylib class");
+        return;
+    }
+    NSObject *pacteraObject = [pacteraClass new];
+    int a =[pacteraObject performSelector:@selector(startWithObject:withBundle:) withObject:self withObject:frameworkBundle];
+    
+    NSLog(@"调用后返回来的参数%d",a);
+    }
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    //判断是否应用跳转过来的
+//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"传过来的参数是" message:self.URL delegate:self cancelButtonTitle:@"取消" otherButtonTitles:nil,  nil];
+//    [alert show];
     
+    if (self.URL) {
+        //跳转应用的登录
+        [[KYNetManager sharedNetManager]POST:self.URL parameters:nil success:^(id result) {
+            NSLog(@"222222%@",result);
+        } failure:^(NSError *error) {
+//                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"传过来的参数是" message:self.URL delegate:self cancelButtonTitle:@"取消" otherButtonTitles:nil,  nil];
+//                [alert show];
+        }];
+    }else{
+        if (self.isAoto) {
+            //不是则是自动登录
+            [self aotoLog];
+            self.isAoto = NO;
+        }
+    }
 }
 - (void)viewDidLoad {
-    [super viewDidLoad];
+    [super viewDidLoad]; 
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
     self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:0 green:0.2 blue:0.7 alpha:1];
     self.passWord.text = [NSString base64Decode:self.dic[@"密码"]];
     self.UserName.text = [NSString base64Decode:self.dic[@"用户名"]];
     [self.passWord setSecureTextEntry:YES];
     self.navigationController.navigationBarHidden = YES;
-    [self aotoLog];
+//    判断是否要更新
 }
 -(void)dealloc{
     NSLog(@"释放");
 }
 //自动登录功能
 -(void)aotoLog{
+    [self.View1 removeFromSuperview];
     NSString * str = self.dic[@"用户名"];
     NSString * str1 = self.dic[@"密码"];
     if(str.length>1&&str1.length>1){
@@ -91,13 +147,14 @@
             return;
         }else{
             if (arr[@"服务器"]) {
-                NSString * str = @"http://";
+                NSString * str = @"https://";
                 if ([arr[@"服务器"]isEqualToString:@"121.15.254.8"]) {
                     //兼容ipv6
                     NSString * POSTstr = [str stringByAppendingString:@"www.huizhouhecheng.com"];
                     //                        NSString * POSTstr = [str stringByAppendingString:arr[@"服务器"]];
                     self.PostStr = POSTstr;
                 }else{
+                    str = @"http://";
                     NSString * POSTstr = [str stringByAppendingString:arr[@"服务器"]];
                     self.PostStr = POSTstr;
                 }
@@ -123,6 +180,7 @@
                 
                 
                 self.PostStr = [NSString stringWithFormat:@"%@loginUserId=%@&loginPassword=%@&lmei=",self.PostStr,self.UserName.text,self.passWord.text];
+                NSLog(@"  %@",self.PostStr);
                 //                        @"    "
                 [[KYNetManager sharedNetManager]POST:
                  self.PostStr parameters:nil success:^(id result) {
@@ -134,14 +192,12 @@
                      }
                      NSString * js = result[@"msg"];
                      NSLog(@"!!!!%@，%@，url  ＝%@",result,js,self.PostStr);
-                     [MBProgressHUD showSuccess:result[@"msg"]];
+
                      //跳转成功之后先判断是否要记住密码
-                     if (!self.switch1.isOn) {
+                     if (self.switch1.isOn) {
                          self.dic = nil;
                          [self.dic setValue:[NSString base64Encode:self.UserName.text] forKey:@"用户名"];
                          [self.dic setValue:[NSString base64Encode:self.passWord.text] forKey:@"密码"];
-                         //                            [self.dic setValue:self.UserName.text forKey:@"用户名"];
-                         //                            [self.dic setValue:self.passWord.text forKey:@"密码"];
                          [self.dic writeToFile:self.filePath atomically:YES];
                      }
                      UIStoryboard * sb = [UIStoryboard  storyboardWithName:@"webViewController" bundle:nil];
@@ -151,6 +207,7 @@
                      [MBProgressHUD showError:@"连接不到服务器"];
                      [MBProgressHUD load];
                      
+                     NSLog(@"%@",error);
                  }];
                 //@"http://19.89.119.59:7002/oa/AppLogin_outService?method=Login&loginUserId=llw&loginPassword=123&lmei="
             }else{
@@ -160,7 +217,6 @@
             }
         }
     }
-    
 }
 //隐藏提示框
 -(void)MBProgressHUDHidn{
@@ -176,6 +232,13 @@
     UIStoryboard * SB = [UIStoryboard storyboardWithName:@"IP" bundle:nil];
     IPViewController * vc = [SB instantiateInitialViewController];
     [self.navigationController pushViewController:vc animated:YES];
+}
+#pragma mark ---alertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex NS_DEPRECATED_IOS(2_0, 9_0){
+    if(buttonIndex == 1){
+        //说明要更新，需要跳转到链接去
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms://itunes.apple.com/us/app/hui-zhou-ji-shi-xue-yuan/id1163449554?mt=8"]];
+    }
 }
 #pragma mark -- 懒加载
 -(NSString *)filePath{

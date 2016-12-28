@@ -132,6 +132,10 @@
         NSArray * array = [[NSArray alloc]initWithArray:[[NSFileManager defaultManager]contentsOfDirectoryAtPath:filePath error:&error]];
         //获取站内的文件夹
         self.attachmentArr = array;
+        if (self.attachmentArr.count == 0) {
+            [MBProgressHUD showError:@"没有站内文件"];
+            return;
+        }
         //创建UIPickerView对象
         UIPickerView *pickerView = [[UIPickerView alloc] init];
         //设置frame
@@ -273,15 +277,30 @@
     [[KYNetManager sharedNetManager]POST:[str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] parameters:nil success:^(id result) {
         //        NSArray * arr = [data dataWithDic:result[@"data"]];
         //        data * data1 = arr.lastObject;
-        if (self.blockName) {
-            self.blockName(@"1");
-        }
-        
-        [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:2] animated:YES];
+        UIImage * image = [UIImage imageNamed:@"airplane.png"];
+        UIImageView * imageView = [[UIImageView alloc]initWithFrame:CGRectMake(self.view.frame.size.width/2-60, self.view.frame.size.height/2-60, 60, 60)];
+        imageView.image = image;
+        [self.view addSubview:imageView];
+        [UIView animateWithDuration:1.2 animations:^{
+            imageView.transform = CGAffineTransformTranslate(imageView.transform, self.view.frame.size.width*0.7, -100);
+        }];
+        [self performSelector:@selector(sendSuccess) withObject:nil afterDelay:1];
+        [self performSelector:@selector(pushEmail) withObject:nil afterDelay:1.5];
         NSLog(@"成功：!~~~~~%@",result);
     } failure:^(NSError *error) {
         NSLog(@"失败%@",error);
     }];
+}
+
+-(void)sendSuccess{
+    [MBProgressHUD showSuccess:@"发送成功"];
+}
+-(void)pushEmail{
+    if (self.blockName) {
+        self.blockName(@"1");
+    }
+    
+    [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:2] animated:YES];
 }
 -(void)saveMail{
     NSString  * str = [NSString stringWithFormat:@"%@/AppHttpService?method=SaveEmail&emailId=%@&receiverId=",[path UstringWithURL:nil],[[self uuidString] stringByReplacingOccurrencesOfString:@"-" withString:@""]];
@@ -407,7 +426,6 @@
             [label addGestureRecognizer:recoginzer];
             
             UIButton * delete = [[UIButton alloc]initWithFrame:CGRectMake(itemW-20, 0, 15, 15)];
-            [delete setImage:[UIImage imageNamed:@"hao"] forState:UIControlStateNormal];
             delete.tag =100+i;
             [delete addTarget:self action:@selector(delete:) forControlEvents:UIControlEventTouchDown];
             

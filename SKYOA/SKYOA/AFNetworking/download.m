@@ -19,6 +19,7 @@
 -(void)downloadWithURl:(NSString *)url fileName:(NSString *)name  success:(void (^)(id result))filePath{
     
     NSString * postStr = [NSString stringWithFormat:@"%@/%@",[path UstringWithURL:nil],url];
+    NSLog(@"下载地址%@",postStr);
     // NSURL
     NSString * documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)lastObject];
     NSString * filePath1 = [NSString stringWithFormat:@"%@/oa",documentPath];

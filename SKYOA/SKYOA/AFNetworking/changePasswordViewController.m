@@ -42,7 +42,8 @@
     [super didReceiveMemoryWarning];
 }
 - (IBAction)certain:(id)sender {
-    if (![self.oldPassword.text isEqualToString:self.setPassword.text]) {
+
+    if (![self.certainPassword.text isEqualToString:self.setPassword.text]) {
         [MBProgressHUD showError:@"密码输入不一致"];
         return;
     }

@@ -12,13 +12,14 @@
 +(NSString *)UstringWithURL:(NSString *)path{
     NSString * fielPath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)lastObject]stringByAppendingPathComponent:@"IP.plist"];
     NSDictionary * arr = [[NSDictionary alloc]initWithContentsOfFile:fielPath];
-    NSString * str = @"http://";
+    NSString * str = @"https://";
     NSString * POSTstr;
     if ([arr[@"服务器"]isEqualToString:@"121.15.254.8"]) {
         //兼容ipv6
        POSTstr = [str stringByAppendingString:@"www.huizhouhecheng.com"];
 //        POSTstr = [str stringByAppendingString:arr[@"服务器"]];
     }else {
+        str = @"http://";
         POSTstr = [str stringByAppendingString:arr[@"服务器"]];
     }
     NSString * d = [NSString stringWithFormat:@":%@",arr[@"端口号"]];
