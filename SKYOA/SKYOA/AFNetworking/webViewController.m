@@ -272,6 +272,10 @@
             [self lookFile:args.lastObject];
         }];
     };
+    context[@"iosUpload"] = ^(){
+        NSArray *args = [JSContext currentArguments];
+        NSLog(@"%@",args);
+            };
     //返回 时候调用
     context[@"iosBack"] = ^(){
         NSArray *args = [JSContext currentArguments];
@@ -309,11 +313,18 @@
             }
         }
     };
+    
     //注销账号
     context[@"cancel"] = ^(){
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.navigationController popToRootViewControllerAnimated:YES];
-        });
+        NSLog(@"%@",[[path UstringWithURL:nil] stringByAppendingString:@"/AppLogin_outService?method=LoginOut"] );
+//        dispatch_async(dispatch_get_main_queue(), ^{
+            [[KYNetManager sharedNetManager]POST:[[path UstringWithURL:nil] stringByAppendingString:@"/AppLogin_outService?method=LoginOut&loginUserId=c"] parameters:nil success:^(id result) {
+                 [self.navigationController popToRootViewControllerAnimated:YES];
+            } failure:^(NSError *error) {
+                NSLog(@"%@",error);
+            }];
+//
+//        });
         
     };
     context[@"about"] = ^(){

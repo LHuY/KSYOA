@@ -33,6 +33,8 @@
 @property (nonatomic, strong) UINavigationController *nav;
 @property (nonatomic, copy) NSString *VersionURL;
 @property (nonatomic, strong) UIView *View1;
+//跳转时候用到单点登录记录账号
+@property (nonatomic, strong) NSString *APPZH;
 @end
 
 @implementation ViewController
@@ -80,15 +82,63 @@
     //判断是否应用跳转过来的
 //    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"传过来的参数是" message:self.URL delegate:self cancelButtonTitle:@"取消" otherButtonTitles:nil,  nil];
 //    [alert show];
-    
+//    NSString * str = @"SKYOA://?appid=SKYOA&childSecret=90C1C70B32562A493A107F576B0D117B&userid=20600003";
+    NSString * str;
+    str = [self.URL substringFromIndex:9];
+    //获取参数，向服务器发送请求
+    str = [str stringByReplacingOccurrencesOfString:@"SKYOA" withString:@"SKYOA://"];
+    NSLog(@"%@",[NSString stringWithFormat:@"http://mcp.hzti.net/mobileapi/public/function/checkCasValidity.do?model=iPhone 6&version=2.0&equipmentSystem=7.100000&ip=192.168.6.7&imei=&sblx=IPad&%@",str] );
+    str = [NSString stringWithFormat:@"http://mcp.hzti.net/mobileapi/public/function/checkCasValidity.do?model=iPhone 6&version=2.0&equipmentSystem=7.100000&ip=192.168.6.7&imei=&sblx=IPad&%@",str];
+    str = [str stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     if (self.URL) {
+        //异步串行队列
+         __block typeof(self) typeSelf = self;
+        //先去验证是否通过，通过之后获取账号信息，在去登录
+        dispatch_async(dispatch_queue_create("LhhY", nil), ^{
+            [[KYNetManager sharedNetManager]POST:str parameters:nil success:^(id result) {
+                NSLog(@"%@",result);
+                BOOL status = [[result objectForKey:@"code"] boolValue];
+//                NSLog(@"URL%@",result[@"code"]==0);
+                if (!status) {
+                    NSDictionary * dic = result[@"data"];
+                    //获取用户名
+                    typeSelf.APPZH = dic[@"zgh"];
+                    [[KYNetManager sharedNetManager]POST:[NSString stringWithFormat:@"%@/AppLogin_outService?method=JsLogin&gh=%@",[path UstringWithURL:nil],dic[@"zgh"]] parameters:nil success:^(id result) {
+                        NSLog(@"2");
+                        BOOL status = [[result objectForKey:@"status"] boolValue];
+                        if (!status) {
+                            //说明请求错误；
+                            [MBProgressHUD showError:result[@"msg"]];
+                            return ;
+                        }
+                        typeSelf.isAoto = NO;
+                        UIStoryboard * sb = [UIStoryboard  storyboardWithName:@"webViewController" bundle:nil];
+                        webViewController * vc = [sb instantiateInitialViewController];
+                        [self.navigationController pushViewController:vc animated:YES];
+                    } failure:^(NSError *error) {
+                        NSLog(@"222222%@",error);
+                    }];
+                }else{
+                    [MBProgressHUD showSuccess:@"校验失败"];
+                    return ;
+                }
+              //                     [MBProgressHUD showSuccess:@"校验失败"];
+            } failure:^(NSError *error) {
+                [MBProgressHUD showSuccess:@"错误"];
+                
+            }];
+           
+        });
+        self.URL = nil;
+        
+        dispatch_async(dispatch_queue_create("LhhY", nil), ^{
+            NSLog(@"!!!!%@",typeSelf.APPZH);
+        
+       });
         //跳转应用的登录
-        [[KYNetManager sharedNetManager]POST:self.URL parameters:nil success:^(id result) {
-            NSLog(@"222222%@",result);
-        } failure:^(NSError *error) {
 //                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"传过来的参数是" message:self.URL delegate:self cancelButtonTitle:@"取消" otherButtonTitles:nil,  nil];
 //                [alert show];
-        }];
+        
     }else{
         if (self.isAoto) {
             //不是则是自动登录
@@ -180,10 +230,12 @@
                 
                 
                 self.PostStr = [NSString stringWithFormat:@"%@loginUserId=%@&loginPassword=%@&lmei=",self.PostStr,self.UserName.text,self.passWord.text];
-                NSLog(@"  %@",self.PostStr);
+                NSLog(@"  ~~~%@",self.PostStr);
                 //                        @"    "
                 [[KYNetManager sharedNetManager]POST:
                  self.PostStr parameters:nil success:^(id result) {
+//                     NSLog(@"!!!!%@",result);
+//                     return ;
                      BOOL status = [[result objectForKey:@"status"] boolValue];
                      if (!status) {
                          //说明请求错误；
@@ -232,6 +284,10 @@
     UIStoryboard * SB = [UIStoryboard storyboardWithName:@"IP" bundle:nil];
     IPViewController * vc = [SB instantiateInitialViewController];
     [self.navigationController pushViewController:vc animated:YES];
+}
+//实现两个应用跳转单点登录的逻辑代码
+-(void)PushLogWithURL:(NSString * )URL{
+    
 }
 #pragma mark ---alertViewDelegate
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex NS_DEPRECATED_IOS(2_0, 9_0){

@@ -134,6 +134,10 @@
     self.navigationController.navigationBarHidden =  NO;
 }
 - (IBAction)attachment:(id)sender {
+    if (!self.attachmentArr.count) {
+        [MBProgressHUD showError:@"没有站内附件"];
+        return;
+    }
     if (self.isTunch) {
         self.isTunch = NO;
         //把选好的附件添加到数组中；
@@ -409,7 +413,8 @@
 //
 //文件发送
 - (void)send {
-    
+    //取消键盘的第一响应者
+    [self.textView resignFirstResponder];
 //    QuerySentBoxList
 //    http://19.89.119.59:7002/oa
     //获取随机的UUID
@@ -549,19 +554,12 @@
 - (NSString *)uuidString
 
 {
-    
     CFUUIDRef uuid_ref = CFUUIDCreate(NULL);
-    
     CFStringRef uuid_string_ref= CFUUIDCreateString(NULL, uuid_ref);
-    
     NSString *uuid = [NSString stringWithString:(__bridge NSString *)uuid_string_ref];
-    
     CFRelease(uuid_ref);
-    
     CFRelease(uuid_string_ref);
-    
     return [uuid lowercaseString];
-    
 }
 - (void)save {
     NSString  * str = [NSString stringWithFormat:@"%@/AppHttpService?method=SaveEmail&emailId=%@&receiverId=",[path UstringWithURL:nil],[[self uuidString] stringByReplacingOccurrencesOfString:@"-" withString:@""]];

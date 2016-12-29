@@ -11,7 +11,7 @@
 @interface KYNetManager ()
 
 @property (nonatomic, strong) AFHTTPSessionManager *manager;
-
+@property (nonatomic, assign) BOOL isLOg;
 
 @end
 
@@ -29,6 +29,7 @@
         instance.manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript",@"text/html", @"text/plain", nil];
         //由于服务器方面需要json参数，故需要这行代码
         instance.manager.requestSerializer = [AFJSONRequestSerializer serializer];
+        instance.manager.requestSerializer = [AFHTTPRequestSerializer serializer];
         
     });
     return instance;
@@ -82,7 +83,7 @@
 //    // 设置证书
 //    [securityPolicy setPinnedCertificates:certSet];
 //    self.manager.securityPolicy = securityPolicy;
-//    self.manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    //            self.manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     
     [self.manager POST:URLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         success(responseObject);

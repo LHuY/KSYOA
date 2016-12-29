@@ -92,6 +92,10 @@
     [self.headTitle resignFirstResponder];
 }
 - (IBAction)AddAttachment:(id)sender {
+    if (!self.attachmentArr.count) {
+        [MBProgressHUD showError:@"没有站内附件"];
+        return;
+    }
     if (self.isTunch) {
         self.isTunch = NO;
         //把选好的附件添加到数组中；
@@ -241,6 +245,9 @@
 //发送邮件呢
 -(void)send{
     NSLog(@"发送文件");
+    
+    //取消键盘的第一响应者
+    [self.textView resignFirstResponder];
     NSString  * str = [NSString stringWithFormat:@"%@/AppHttpService?method=SendEmail&emailId=%@&receiverId=",[path UstringWithURL:nil],self.UUID];
     for (int i = 0; i < self.arrayM.count; ++i) {
         personData * model = self.arrayM[i];

@@ -38,7 +38,7 @@
 
     
     
-    
+//    
         self.splashScreenView = [[SplashScreenView alloc] initWithFrame:self.window.bounds defaultImage:[UIImage imageNamed:@"defaultStartScreen"]];
     [self.window addSubview:self.splashScreenView];
     self.splashScreenView.animationStartBlock = ^void(){
@@ -47,7 +47,7 @@
     self.splashScreenView.animationCompletedBlock = ^void(){
         NSLog(@"Animation Completed......");
     };
-    
+//
     
     return YES;
 }
@@ -70,15 +70,14 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options NS_AVAILABLE_IOS(9_0){
-    NSString *canshu = url.absoluteString;
-    
-    NSString * str = @"SKYOA://?appid=SKYOA&childSecret=AC2ED03F56F4517542127EB06E957E6C&userid=20600003";
-    str = [str substringFromIndex:9];
-    //获取参数，向服务器发送请求
-    str = [str stringByReplacingOccurrencesOfString:@"SKYOA" withString:@"SKYOA://"];
-    NSLog(@"%@",[NSString stringWithFormat:@"http://mcp.hzti.net/mobileapi/public/function/checkCasValidity.do?model=iPhone 6&version=2.0&equipmentSystem=7.100000&ip=192.168.6.7&imei=&sblx=IPad&%@",str] );
-    str = [NSString stringWithFormat:@"http://mcp.hzti.net/mobileapi/public/function/checkCasValidity.do?model=iPhone 6&version=2.0&equipmentSystem=7.100000&ip=192.168.6.7&imei=&sblx=IPad&%@",str];
-    str = [str stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+    NSString * canshu = url.absoluteString;
+//    NSString * str = @"SKYOA://?appid=SKYOA&childSecret=2C387AA2FC84686219E6498F40868C94&userid=20600003";
+//    str = [str substringFromIndex:9];
+//    //获取参数，向服务器发送请求
+//    str = [str stringByReplacingOccurrencesOfString:@"SKYOA" withString:@"SKYOA://"];
+//    NSLog(@"%@",[NSString stringWithFormat:@"http://mcp.hzti.net/mobileapi/public/function/checkCasValidity.do?model=iPhone 6&version=2.0&equipmentSystem=7.100000&ip=192.168.6.7&imei=&sblx=IPad&%@",str] );
+//    str = [NSString stringWithFormat:@"http://mcp.hzti.net/mobileapi/public/function/checkCasValidity.do?model=iPhone 6&version=2.0&equipmentSystem=7.100000&ip=192.168.6.7&imei=&sblx=IPad&%@",str];
+//    str = [str stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     self.rvc.URL= canshu;
 //    [MBProgressHUD showSuccess:canshu];
     return YES;

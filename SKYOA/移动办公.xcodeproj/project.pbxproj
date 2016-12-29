@@ -31,6 +31,7 @@
 		25AC3B541DCC8F38002D52B0 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 25AC3B531DCC8F38002D52B0 /* libsqlite3.tbd */; };
 		25AC3B581DCC90DA002D52B0 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25AC3B571DCC90DA002D52B0 /* CoreTelephony.framework */; };
 		25BF8FC11DE2DDFA00D64C62 /* sendEmail.m in Sources */ = {isa = PBXBuildFile; fileRef = 25BF8FC01DE2DDFA00D64C62 /* sendEmail.m */; };
+		25D56C651E14BE43004E99AA /* dandianLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 25D56C641E14BE43004E99AA /* dandianLog.m */; };
 		25FE01D51E13A55C00EDAFDC /* SplashScreenView.m in Sources */ = {isa = PBXBuildFile; fileRef = 25FE01D41E13A55C00EDAFDC /* SplashScreenView.m */; };
 		B0070B021D8681B7008E0BE8 /* SWTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B0070B011D8681B7008E0BE8 /* SWTableViewCell.m */; };
 		B015FD481DAC80D200DEBEB0 /* AFAutoPurgingImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B015FD351DAC80D200DEBEB0 /* AFAutoPurgingImageCache.m */; };
@@ -164,6 +165,8 @@
 		25AC3B571DCC90DA002D52B0 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		25BF8FBF1DE2DDFA00D64C62 /* sendEmail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sendEmail.h; sourceTree = "<group>"; };
 		25BF8FC01DE2DDFA00D64C62 /* sendEmail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = sendEmail.m; sourceTree = "<group>"; };
+		25D56C631E14BE43004E99AA /* dandianLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dandianLog.h; sourceTree = "<group>"; };
+		25D56C641E14BE43004E99AA /* dandianLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = dandianLog.m; sourceTree = "<group>"; };
 		25FE01D31E13A55C00EDAFDC /* SplashScreenView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplashScreenView.h; sourceTree = "<group>"; };
 		25FE01D41E13A55C00EDAFDC /* SplashScreenView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplashScreenView.m; sourceTree = "<group>"; };
 		B0070B001D8681B7008E0BE8 /* SWTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWTableViewCell.h; sourceTree = "<group>"; };
@@ -452,6 +455,15 @@
 			name = VIew;
 			sourceTree = "<group>";
 		};
+		25D56C621E14BDFF004E99AA /* view */ = {
+			isa = PBXGroup;
+			children = (
+				25D56C631E14BE43004E99AA /* dandianLog.h */,
+				25D56C641E14BE43004E99AA /* dandianLog.m */,
+			);
+			name = view;
+			sourceTree = "<group>";
+		};
 		B015FD1F1DAC807B00DEBEB0 /* afn */ = {
 			isa = PBXGroup;
 			children = (
@@ -584,6 +596,7 @@
 		B03C5E721D62EB1A00BD6773 /* Logcontroller */ = {
 			isa = PBXGroup;
 			children = (
+				25D56C621E14BDFF004E99AA /* view */,
 				B0B6095D1D6232E000F21DD3 /* ViewController.h */,
 				B0B6095E1D6232E000F21DD3 /* ViewController.m */,
 				259EA6E61E1210880031130C /* Log.storyboard */,
@@ -986,6 +999,7 @@
 				B029A1381D8E4527000D1538 /* LXNetworking.m in Sources */,
 				B015FD4D1DAC80D200DEBEB0 /* UIImageView+AFNetworking.m in Sources */,
 				B015FD4B1DAC80D200DEBEB0 /* UIActivityIndicatorView+AFNetworking.m in Sources */,
+				25D56C651E14BE43004E99AA /* dandianLog.m in Sources */,
 				B03C5E761D62EB7C00BD6773 /* webViewController.m in Sources */,
 				B01CFAD81D951AE50003DC02 /* returnMailViewController.m in Sources */,
 				B04369561D6EF18300F5508A /* aboutViewController.m in Sources */,
