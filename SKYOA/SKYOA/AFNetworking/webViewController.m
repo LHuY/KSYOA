@@ -21,6 +21,8 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 #import "ZipArchive.h"
+#import "attachmentTableController.h"
+#import "Upload.h"
 
 #define Radius 20
 @interface webViewController ()<NSURLConnectionDataDelegate,UIWebViewDelegate,UIDocumentInteractionControllerDelegate>
@@ -60,7 +62,11 @@
 //记录一下版本更新URL
 @property (nonatomic, copy) NSString *VersionURL;
 @property (nonatomic, strong) NSMutableArray *titleArr;
+//判断是否要自动登录
 @property (nonatomic, assign) bool  isAoto;
+//文件上传的参数值。
+@property (nonatomic, strong) NSArray *uploadVal;
+
 @end
 
 @implementation webViewController
@@ -209,6 +215,7 @@
 
 #pragma mark--UIWebview-代理
 - (void)webViewDidStartLoad:(UIWebView *)webView{
+    self.contentView.hidden = NO;
 }
 - (IBAction)lookFile:(NSString *)fileName {
     NSFileManager *manager = [NSFileManager defaultManager];
@@ -231,6 +238,7 @@
         [self.centerCir removeFromSuperview];
         [self.rightCir removeFromSuperview];
 }
+
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
     //去除加载页面动画
     [self removeLoadingView];
@@ -274,7 +282,32 @@
     };
     context[@"iosUpload"] = ^(){
         NSArray *args = [JSContext currentArguments];
+        self.uploadVal = args;
         NSLog(@"%@",args);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIStoryboard * sb = [UIStoryboard storyboardWithName:@"attachmentTableController" bundle:nil];
+            
+            attachmentTableController * vc = [sb instantiateInitialViewController];
+            vc.didSelect = (^ (NSString * fileName){
+                //通知公告文件上传。
+                NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/AppUploadService?biz=%@&processid=%@&encryption=&bizclass=%@&creatorid=",[path UstringWithURL:nil],self.uploadVal[1],self.uploadVal.firstObject,self.uploadVal.lastObject]];
+                [Upload sendAttachmentFileName:fileName filepath:[NSString stringWithFormat:@"%@/Documents/oa/%@", NSHomeDirectory(),fileName] URL:url success:^(id result) {
+                    result = [NSJSONSerialization JSONObjectWithData:result options:0 error:NULL];
+                    NSLog(@"！！！%@",result);
+                    BOOL stast = [[result valueForKey:@"status"] boolValue];
+                    if (stast) {
+                        //上传成功
+                        [MBProgressHUD showSuccess:@"上传成功"];
+                        //上传成功。重新刷新
+                        [self.webView1 reload];
+                    }
+                } failure:^(NSError *error) {
+                    NSLog(@"%@",error);
+                }];
+            });
+            self.navigationController.modalPresentationStyle = UIModalPresentationPopover;
+            [self.navigationController pushViewController:vc animated:YES];
+        });
             };
     //返回 时候调用
     context[@"iosBack"] = ^(){
@@ -373,7 +406,6 @@
     self.title1.hidden = NO;
     self.title1.text = [self.webView1 stringByEvaluatingJavaScriptFromString:@"document.title"];
     self.navBnt.hidden = NO;
-    self.contentView.hidden = NO;
     [self.titleArr addObject:self.title1.text];
     if ([currentURL isEqualToString:[[path UstringWithURL:nil]stringByAppendingString:@"/jsp/app/index.html"]]) {
         self.contentView.hidden = YES;
@@ -404,14 +436,17 @@
 -(void)pushiMail{
     
     UIStoryboard * sb = [UIStoryboard storyboardWithName:@"mail" bundle:nil];
-    EmailViewController * vc = [sb instantiateViewControllerWithIdentifier:@"email"];
+    EmailViewController * vc = [sb instantiateViewControllerWithIdentifier:@"mail"];
     if (self.personData1 == nil) {
         [MBProgressHUD showError:@"网络不给力，稍后"];
         //邮箱人员列表请求
         [self paple];
     }else{
         vc.personData1 = self.personData1;
-        [self.navigationController pushViewController:vc animated:YES];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [self.navigationController pushViewController:vc animated:YES];
+        });
     }
 }
 

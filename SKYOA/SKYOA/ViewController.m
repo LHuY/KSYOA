@@ -80,9 +80,6 @@
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     //判断是否应用跳转过来的
-//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"传过来的参数是" message:self.URL delegate:self cancelButtonTitle:@"取消" otherButtonTitles:nil,  nil];
-//    [alert show];
-//    NSString * str = @"SKYOA://?appid=SKYOA&childSecret=90C1C70B32562A493A107F576B0D117B&userid=20600003";
     NSString * str;
     str = [self.URL substringFromIndex:9];
     //获取参数，向服务器发送请求

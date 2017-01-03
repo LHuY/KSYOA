@@ -24,6 +24,7 @@
     
 }
 +(NSMutableArray *)personWithArray:(NSArray *)arr{
+    NSLog(@"%@q",arr);
     int count = 0;
     //创建一个总数组，用来装分数组和sestion数组
     NSMutableArray * arrM =[NSMutableArray array];
@@ -33,6 +34,20 @@
     NSMutableArray * section = [NSMutableArray array];
     //创建一个cell数组
     NSMutableArray * cell = [NSMutableArray array];
+    NSString * temp;
+//    for (int i = 0; i < arr.count; ++i) {
+//        NSDictionary * dic = arr[i];
+//        if (dic[@"deptName"]&&dic[@"organType"]&&dic[@"deptId"]) {
+//            temp =dic[@"deptName"];
+//            NSLog(@"%@",temp);
+//            [section addObject:dic[@"deptName"]];
+//            //判断是否含有二级
+//        }else if ([[dic allKeys]containsObject:@"porganName"]){
+//            if ([dic[@"deptName"]isEqualToString:dic[@"porganName"]])
+//            {
+//                NSLog(@"二级%@",dic[@"organName"]);
+//            }
+//        }
     for (int i = 0; i < arr.count; ++i) {
         NSDictionary * dic = arr[i];
         if (dic[@"deptName"]) {
@@ -60,6 +75,9 @@
     [arrM1 addObject:cell];
     [arrM addObject:section];
     [arrM addObject:arrM1];
+//    }
     return arrM;
 }
 @end
+
+

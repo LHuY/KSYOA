@@ -8,7 +8,7 @@
         <!--Email View Controller-->
         <scene sceneID="Ewk-X1-ddu">
             <objects>
-                <viewController storyboardIdentifier="email" id="l3N-YP-DZD" customClass="EmailViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="mail" id="l3N-YP-DZD" customClass="EmailViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Gfr-ht-gxj"/>
                         <viewControllerLayoutGuide type="bottom" id="OQG-gM-VVx"/>

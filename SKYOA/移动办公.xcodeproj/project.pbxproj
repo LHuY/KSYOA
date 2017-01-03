@@ -32,6 +32,9 @@
 		25AC3B581DCC90DA002D52B0 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25AC3B571DCC90DA002D52B0 /* CoreTelephony.framework */; };
 		25BF8FC11DE2DDFA00D64C62 /* sendEmail.m in Sources */ = {isa = PBXBuildFile; fileRef = 25BF8FC01DE2DDFA00D64C62 /* sendEmail.m */; };
 		25D56C651E14BE43004E99AA /* dandianLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 25D56C641E14BE43004E99AA /* dandianLog.m */; };
+		25D56C691E1500BC004E99AA /* Upload.m in Sources */ = {isa = PBXBuildFile; fileRef = 25D56C681E1500BC004E99AA /* Upload.m */; };
+		25D56C6D1E150902004E99AA /* attachmentTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25D56C6C1E150902004E99AA /* attachmentTableController.m */; };
+		25D56C6F1E15102C004E99AA /* attachmentTableController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 25D56C6E1E15102C004E99AA /* attachmentTableController.storyboard */; };
 		25FE01D51E13A55C00EDAFDC /* SplashScreenView.m in Sources */ = {isa = PBXBuildFile; fileRef = 25FE01D41E13A55C00EDAFDC /* SplashScreenView.m */; };
 		B0070B021D8681B7008E0BE8 /* SWTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B0070B011D8681B7008E0BE8 /* SWTableViewCell.m */; };
 		B015FD481DAC80D200DEBEB0 /* AFAutoPurgingImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B015FD351DAC80D200DEBEB0 /* AFAutoPurgingImageCache.m */; };
@@ -163,10 +166,15 @@
 		25AC3B531DCC8F38002D52B0 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		25AC3B551DCC8FAF002D52B0 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		25AC3B571DCC90DA002D52B0 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
-		25BF8FBF1DE2DDFA00D64C62 /* sendEmail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sendEmail.h; sourceTree = "<group>"; };
-		25BF8FC01DE2DDFA00D64C62 /* sendEmail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = sendEmail.m; sourceTree = "<group>"; };
+		25BF8FBF1DE2DDFA00D64C62 /* sendEmail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sendEmail.h; path = AFNetworking/sendEmail.h; sourceTree = "<group>"; };
+		25BF8FC01DE2DDFA00D64C62 /* sendEmail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = sendEmail.m; path = AFNetworking/sendEmail.m; sourceTree = "<group>"; };
 		25D56C631E14BE43004E99AA /* dandianLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dandianLog.h; sourceTree = "<group>"; };
 		25D56C641E14BE43004E99AA /* dandianLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = dandianLog.m; sourceTree = "<group>"; };
+		25D56C671E1500BC004E99AA /* Upload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Upload.h; sourceTree = "<group>"; };
+		25D56C681E1500BC004E99AA /* Upload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Upload.m; sourceTree = "<group>"; };
+		25D56C6B1E150902004E99AA /* attachmentTableController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = attachmentTableController.h; sourceTree = "<group>"; };
+		25D56C6C1E150902004E99AA /* attachmentTableController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = attachmentTableController.m; sourceTree = "<group>"; };
+		25D56C6E1E15102C004E99AA /* attachmentTableController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = attachmentTableController.storyboard; sourceTree = "<group>"; };
 		25FE01D31E13A55C00EDAFDC /* SplashScreenView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplashScreenView.h; sourceTree = "<group>"; };
 		25FE01D41E13A55C00EDAFDC /* SplashScreenView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplashScreenView.m; sourceTree = "<group>"; };
 		B0070B001D8681B7008E0BE8 /* SWTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWTableViewCell.h; sourceTree = "<group>"; };
@@ -449,8 +457,6 @@
 		25A7B1411DE2949300F05AB5 /* VIew */ = {
 			isa = PBXGroup;
 			children = (
-				25BF8FBF1DE2DDFA00D64C62 /* sendEmail.h */,
-				25BF8FC01DE2DDFA00D64C62 /* sendEmail.m */,
 			);
 			name = VIew;
 			sourceTree = "<group>";
@@ -462,6 +468,27 @@
 				25D56C641E14BE43004E99AA /* dandianLog.m */,
 			);
 			name = view;
+			sourceTree = "<group>";
+		};
+		25D56C661E150093004E99AA /* 文件上传 */ = {
+			isa = PBXGroup;
+			children = (
+				25BF8FBF1DE2DDFA00D64C62 /* sendEmail.h */,
+				25BF8FC01DE2DDFA00D64C62 /* sendEmail.m */,
+				25D56C671E1500BC004E99AA /* Upload.h */,
+				25D56C681E1500BC004E99AA /* Upload.m */,
+			);
+			name = "文件上传";
+			sourceTree = "<group>";
+		};
+		25D56C6A1E150896004E99AA /* 附件控制器 */ = {
+			isa = PBXGroup;
+			children = (
+				25D56C6B1E150902004E99AA /* attachmentTableController.h */,
+				25D56C6C1E150902004E99AA /* attachmentTableController.m */,
+				25D56C6E1E15102C004E99AA /* attachmentTableController.storyboard */,
+			);
+			name = "附件控制器";
 			sourceTree = "<group>";
 		};
 		B015FD1F1DAC807B00DEBEB0 /* afn */ = {
@@ -558,6 +585,7 @@
 		B036CD2B1D7EA1BD0015610C /* mail */ = {
 			isa = PBXGroup;
 			children = (
+				25D56C6A1E150896004E99AA /* 附件控制器 */,
 				B04D61A91D869C6900A95331 /* controller */,
 				B04DD68C1D829FE400866387 /* view */,
 				B036CD3F1D7FAF12000BCEF1 /* other */,
@@ -609,6 +637,7 @@
 		B03C5E731D62EB4000BD6773 /* 工具类 */ = {
 			isa = PBXGroup;
 			children = (
+				25D56C661E150093004E99AA /* 文件上传 */,
 				2555A2801E12005E003B30EC /* 动态启动页 */,
 				2579C3C81E07DAD600D493A2 /* ZipArchive */,
 				B015FD331DAC80D200DEBEB0 /* UIKit+AFNetworking */,
@@ -926,6 +955,7 @@
 				B04369531D6EF17400F5508A /* about.storyboard in Resources */,
 				B0B268DA1D8FCCE500F0DF7A /* selectMan.storyboard in Resources */,
 				B036CD401D7EC1D70015610C /* mail.storyboard in Resources */,
+				25D56C6F1E15102C004E99AA /* attachmentTableController.storyboard in Resources */,
 				B0B609671D6232E000F21DD3 /* LaunchScreen.storyboard in Resources */,
 				B029A1301D8E3066000D1538 /* MBProgressHUD.bundle in Resources */,
 				250AE5A81DFF9CF400AFB6AA /* clientSSL.cer in Resources */,
@@ -985,6 +1015,7 @@
 				2526496B1E11F2F600A9C6DC /* loding.m in Sources */,
 				25BF8FC11DE2DDFA00D64C62 /* sendEmail.m in Sources */,
 				B015FD4C1DAC80D200DEBEB0 /* UIButton+AFNetworking.m in Sources */,
+				25D56C6D1E150902004E99AA /* attachmentTableController.m in Sources */,
 				B02991C11D9A194000FB542F /* changePasswordViewController.m in Sources */,
 				B0B268E71D8FCE0300F0DF7A /* YUFoldingTableView.m in Sources */,
 				B015FD4A1DAC80D200DEBEB0 /* AFNetworkActivityIndicatorManager.m in Sources */,
@@ -1001,6 +1032,7 @@
 				B015FD4B1DAC80D200DEBEB0 /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 				25D56C651E14BE43004E99AA /* dandianLog.m in Sources */,
 				B03C5E761D62EB7C00BD6773 /* webViewController.m in Sources */,
+				25D56C691E1500BC004E99AA /* Upload.m in Sources */,
 				B01CFAD81D951AE50003DC02 /* returnMailViewController.m in Sources */,
 				B04369561D6EF18300F5508A /* aboutViewController.m in Sources */,
 				B036CD571D7FB19E000BCEF1 /* ChineseToPinyinResource.m in Sources */,
