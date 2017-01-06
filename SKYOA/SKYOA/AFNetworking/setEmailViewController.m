@@ -12,6 +12,7 @@
 #import "path.h"
 #import "personData.h"
 #import "selectManViewController.h"
+#import "selectPapleViewController.h"
 #import "MBProgressHUD+PKX.h"
 #import "UIButton+baritembtn.h"
 #import "AFNetworking.h"
@@ -291,9 +292,10 @@
 
 
 - (IBAction)pushPerson:(id)sender {
-    UIStoryboard * sb = [UIStoryboard storyboardWithName:@"selectMan" bundle:nil];
-    selectManViewController * vc = [sb instantiateInitialViewController];
-    vc.arr = self.personData1;
+    UIStoryboard * sb = [UIStoryboard storyboardWithName:@"selectPapleViewController" bundle:nil];
+    selectPapleViewController * vc = [sb instantiateInitialViewController];
+    NSLog(@"%@",self.personData1);
+    vc.papleDatas = self.personData1;
     vc.blockName = ^(personData * model){
         if (self.arrayM.count) {
             //用来判断是否包含有model，类型

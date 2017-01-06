@@ -23,6 +23,14 @@
 -(void)setValue:(id)value forUndefinedKey:(NSString *)key{
     
 }
+//显示页面的时候调用请求数据。
++(NSMutableArray *)personWithData:(NSArray *)data{
+    NSMutableArray * arrayM = [NSMutableArray array ];
+    for (NSDictionary * dic in data) {
+        [arrayM addObject:[personData personWithDict:dic]];
+    }
+    return arrayM;
+}
 +(NSMutableArray *)personWithArray:(NSArray *)arr{
     NSLog(@"%@q",arr);
     int count = 0;

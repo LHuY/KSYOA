@@ -1,31 +1,36 @@
 //
-//  selectManViewController.m
-//  SKYOA
+//  selectPapleViewController.m
+//  移动办公
 //
-//  Created by struggle on 16/9/19.
-//  Copyright © 2016年 struggle. All rights reserved.
+//  Created by L灰灰Y on 2017/1/3.
+//  Copyright © 2017年 struggle. All rights reserved.
 //
 
-#import "selectManViewController.h"
-#import "YUFoldingTableView.h"
-#import "KYNetManager.h"
-#import "path.h"
+#import "selectPapleViewController.h"
+#import "CusThirdTableView1.h"
 #import "ZYPinYinSearch.h"
 #import "ChineseString.h"
-#import "UIButton+baritembtn.h"
-#import "personData.h"
+#import "KYNetManager.h"
+#import "path.h"
 
 #define kScreenWidth        [UIScreen mainScreen].bounds.size.width
 #define kScreenHeight       [UIScreen mainScreen].bounds.size.height
 #define kColor          [UIColor colorWithRed:230.0/255.0 green:230.0/255.0 blue:230.0/255.0 alpha:1];
-@interface selectManViewController ()<YUFoldingTableViewDelegate,UITableViewDelegate,UITableViewDataSource,UITabBarDelegate,UISearchBarDelegate>
 
-@property (nonatomic, weak) YUFoldingTableView *foldingTableView;
-//组数据
-@property (nonatomic, strong) NSMutableArray * papleData;
-//行数据
-@property (nonatomic, strong) NSMutableArray * rowData;
+#define screenWidthW  [[UIScreen mainScreen] bounds].size.width
+#define screenHeightH [[UIScreen mainScreen] bounds].size.height
 
+@interface selectPapleViewController ()<CusThirdTableViewDelegate,UITableViewDelegate,UITableViewDataSource,UITabBarDelegate,UISearchBarDelegate>{
+    NSString *linkThird;
+}
+/**
+ *  三级视图
+ */
+@property (nonatomic,strong)CusThirdTableView1 *thirdView;
+/**
+ *  添加商品分类数据
+ */
+@property (nonatomic,strong)NSMutableArray *addChoiceModel;
 
 //搜索部分
 @property (strong, nonatomic) UITableView *friendTableView;
@@ -41,58 +46,68 @@
 @property (nonatomic, assign) BOOL Search;
 @end
 
-@implementation selectManViewController
+@implementation selectPapleViewController
 
+-(CusThirdTableView1 *)thirdView{
+    if (_thirdView==nil) {
+        _thirdView=[CusThirdTableView1 cusThiedTableView:CGRectMake(0,108,screenWidthW,screenHeightH-108) dataArr:self.addChoiceModel personData:self.arr  ];
+        _thirdView.cusDelegate=self;
+        _thirdView.hidden = YES;
+        [self.view addSubview:_thirdView];
+    }
+    return _thirdView;
+}
+-(NSMutableArray *)addChoiceModel{
+    if (_addChoiceModel==nil) {
+        _addChoiceModel=[NSMutableArray array];
+    }
+    return _addChoiceModel;
+}
+//-(BOOL)prefersStatusBarHidden{
+//    return YES;
+//}
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self getPapleDAtas:^(id result) {
+        BOOL status = [[result objectForKey:@"status"] boolValue];
+        if (status) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.arr = [personData personWithData:result[@"data"]];
+                [self addDataWith:self.arr];
+                self.thirdView.hidden=!self.thirdView.hidden;
+                //搜索部分
+                self.navigationItem.title = @"选择要收件的人";
+                self.view.backgroundColor = [UIColor whiteColor];
+                [self initData];
+                [self.view addSubview:self.friendTableView];
+                [self.view addSubview:self.searchBar];
+                self.friendTableView.alpha = 0;
+            });
+        }else{
+            //获取人员失败
+        }
+
+    } failure:^(NSError *error) {
+        //请求数据失败
+    }];
+}
+//获取人员数据
+-(void)getPapleDAtas:(void(^)( id result))success failure:(void(^)(NSError *error))failure{
+    //邮箱人员列表请求
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         [[KYNetManager sharedNetManager]POST:[[path UstringWithURL:nil]stringByAppendingString:@"/AppHttpService?method=GetStruLsit&struId="] parameters:nil success:^(id result) {
-            NSLog(@"%@",result);
-            BOOL status = [[result objectForKey:@"status"] boolValue];
-            if (status) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                   self.papleData =  [personData personWithData:result[@"data"]];
-                    NSLog(@"%@",self.papleData);
-                });
-            }else{
-                
-            }
+            success(result);
         } failure:^(NSError *error) {
+            failure(error);
         }];
     });
-
-    //左边的导航栏按钮
-    UIButton * doBack = [UIButton BarButtonItemWithTitle:@"返回" addImage:[UIImage imageNamed:@"return"]];
-    //给返回按钮添加点击事件
-    [doBack addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:doBack];
-    self.navigationController.navigationBarHidden = NO;
-    self.view.backgroundColor = [UIColor whiteColor];
-    // 创建tableView
-    [self setupFoldingTableView];
-    //搜索部分
-    
-    self.navigationItem.title = @"选择要收件的人";
-    self.view.backgroundColor = [UIColor whiteColor];
-    [self initData];
-    [self.view addSubview:self.friendTableView];
-    [self.view addSubview:self.searchBar];
-    self.friendTableView.alpha = 0;
-    //搜索部分
 }
-#pragma mark --- 隐藏状态栏
--(BOOL)prefersStatusBarHidden{
-    return YES;
-}
--(void)back{
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
 #pragma mark - Init
 - (void)initData {
     NSMutableArray* arr =[NSMutableArray array];
     NSMutableDictionary * dic = [NSMutableDictionary dictionary ];
-    for (NSArray * array in self.arr.lastObject) {
+    NSLog(@"%@",self.arr.lastObject);
+    for (NSArray * array in self.papleDatas.lastObject) {
         for (personData * model in array) {
             [arr addObject:model.organName];
             [dic setObject:model.organId forKey:model.organName];
@@ -106,7 +121,6 @@
     //对原数据进行排序重新分组
     _allDataSource = [ChineseString LetterSortArray:_dataSource];
 }
-
 - (UITableView *)friendTableView {
     if (!_friendTableView) {
         _friendTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 64, kScreenWidth, kScreenHeight-330) style:UITableViewStylePlain];
@@ -119,7 +133,7 @@
 
 - (UISearchBar *)searchBar {
     if (!_searchBar) {
-        _searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 44, kScreenWidth, 44)];
+        _searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 64, kScreenWidth, 44)];
         _searchBar.delegate = self;
         _searchBar.placeholder = @"搜索";
         _searchBar.showsCancelButton = NO;
@@ -127,6 +141,15 @@
     return _searchBar;
 }
 
+#pragma mark 加载模型数据
+-(void)addDataWith:(NSArray *)personModel{
+    NSMutableArray * arrayM = [NSMutableArray array ];
+    for (personData * model in personModel) {
+        ShowDataModel *num0=[ShowDataModel showDataModel:0 myID:0 grade:0 isOpen:YES showName:model.organName rightShowName:nil personMOdel:model];
+        [arrayM addObject:num0];
+    }
+    [self.addChoiceModel addObjectsFromArray:arrayM];
+}
 #pragma mark - UITableViewDataSource
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     personData * model = [[personData alloc]init];
@@ -226,7 +249,6 @@
     [UIView animateWithDuration:0.3 animations:^{
         self.navigationController.navigationBarHidden = YES;
         self.friendTableView.alpha = 1;
-        self.navigationController.navigationBarHidden = YES;
         _searchBar.frame = CGRectMake(0, 20, kScreenWidth, 44);
         _searchBar.showsCancelButton = YES;
     }];
@@ -238,6 +260,7 @@
     [UIView animateWithDuration:0.3 animations:^{
         self.friendTableView.alpha = 0;
         _searchBar.frame = CGRectMake(0, 64, kScreenWidth, 44);
+        _thirdView.frame = CGRectMake(0,50,screenWidthW,screenHeightH-58);
     }];
     self.navigationController.navigationBarHidden = NO;
     _searchBar.showsCancelButton = NO;
@@ -246,116 +269,19 @@
     _isSearch = NO;
     [_friendTableView reloadData];
 }
-// 创建tableView
-- (void)setupFoldingTableView
-{
-    self.automaticallyAdjustsScrollViewInsets = NO;
-    
-    YUFoldingTableView *foldingTableView = [[YUFoldingTableView alloc] initWithFrame:CGRectMake(0, 88, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - 88)];
-    _foldingTableView = foldingTableView;
-    
-    [self.view addSubview:foldingTableView];
-    foldingTableView.foldingDelegate = self;
-}
 
-#pragma mark - YUFoldingTableViewDelegate / required（必须实现的代理）
-// 返回箭头的位置
-- (YUFoldingSectionHeaderArrowPosition)perferedArrowPositionForYUFoldingTableView:(YUFoldingTableView *)yuTableView
-{
-    // 没有赋值，默认箭头在左
-    return self.arrowPosition ? :YUFoldingSectionHeaderArrowPositionLeft;
-}
-- (NSInteger )numberOfSectionForYUFoldingTableView:(YUFoldingTableView *)yuTableView
-{
-    NSArray * array = self.arr.firstObject;
-    
-    return array.count;
-}
-- (NSInteger )yuFoldingTableView:(YUFoldingTableView *)yuTableView numberOfRowsInSection:(NSInteger )section
-{
-
-    NSArray * arr = self.arr.lastObject[section];
-    
-    return arr.count;
-}
-- (CGFloat )yuFoldingTableView:(YUFoldingTableView *)yuTableView heightForHeaderInSection:(NSInteger )section
-{
-    return 50;
-}
-- (CGFloat )yuFoldingTableView:(YUFoldingTableView *)yuTableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 50;
-}
-- (NSString *)yuFoldingTableView:(YUFoldingTableView *)yuTableView titleForHeaderInSection:(NSInteger)section
-{
-    return self.arr.firstObject[section];
-}
-- (UIColor *)yuFoldingTableView:(YUFoldingTableView *)yuTableView backgroundColorForHeaderInSection:(NSInteger )section{
-    return [UIColor lightGrayColor];
-}
-- (UITableViewCell *)yuFoldingTableView:(YUFoldingTableView *)yuTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    [[KYNetManager sharedNetManager]POST:[[path UstringWithURL:nil]stringByAppendingString:[NSString stringWithFormat:@"/AppHttpService?method=GetStruLsit&struId=%@",self.papleData[2]]] parameters:nil success:^(id result) {
-        NSLog(@"%@",result);
-        BOOL status = [[result objectForKey:@"status"] boolValue];
-        if (status) {
-            self.rowData =  [personData personWithData:result[@"data"]];
-            NSLog(@"!!!%@",self.papleData);
-        }else{
-            
-        }
-    } failure:^(NSError *error) {
-    }];
-
-    static NSString *cellID = @"cellID";
-    UITableViewCell *cell = [yuTableView dequeueReusableCellWithIdentifier:cellID];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
-        
+#pragma mark 代理方法
+-(void)cusThirdTableView:(CusThirdTableView1 *)cusTV arrModelData:(NSArray<ShowDataModel *> *)arrModelData{
+    //转换model
+    personData * persionModel = [personData new];
+    for (ShowDataModel *model in arrModelData) {
+        persionModel.organId = model.organId;
+        persionModel.organName = model.organName;
+        persionModel.OrganType = model.OrganType;
     }
-
-    
-    
-    
-    //每组的成员model
-//    NSArray * arr = self.arr.lastObject;
-//    
-//    NSArray * arr1 = arr[indexPath.section];
-//    
-//    NSLog(@"第%ld组，第%ld行",(long)indexPath.section,(long)indexPath.row);
-//    personData * model= arr1[indexPath.row];
-//    NSLog(@"要显示数据数组去的数据～～～～，～～%@",model.organName);
-//    
-//    cell.textLabel.text = model.organName;
-    
-    return cell;
-}
-- (void )yuFoldingTableView:(YUFoldingTableView *)yuTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    [yuTableView deselectRowAtIndexPath:indexPath animated:YES];
     if (self.blockName) {
-        //每组的成员model
-        NSArray * arr = self.arr.lastObject;
-        
-        NSArray * arr1 = arr[indexPath.section];
-        personData * model= arr1[indexPath.row];
-        self.blockName(model);
+        self.blockName(persionModel);
     }
-    self.navigationController.navigationBarHidden = NO;
     [self.navigationController popViewControllerAnimated:YES];
-}
-
--(NSMutableArray *)papleData{
-    if (_papleData == nil) {
-        _papleData = [NSMutableArray array ];
-    }
-    return _papleData;
-}
--(NSMutableArray *)rowData{
-    if (_rowData == nil) {
-        _rowData = [NSMutableArray array ];
-        
-    }
-    return _rowData;
-}
-@end
+    
+}@end

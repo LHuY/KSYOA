@@ -253,6 +253,7 @@
                      webViewController * vc = [sb instantiateInitialViewController];
                      [self.navigationController pushViewController:vc animated:YES];
                  } failure:^(NSError *error) {
+                     NSLog(@"%@",error);
                      [MBProgressHUD showError:@"连接不到服务器"];
                      [MBProgressHUD load];
                      

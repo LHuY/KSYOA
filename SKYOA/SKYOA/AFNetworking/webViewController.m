@@ -23,6 +23,7 @@
 #import "ZipArchive.h"
 #import "attachmentTableController.h"
 #import "Upload.h"
+#import "NSString+base64.h"
 
 #define Radius 20
 @interface webViewController ()<NSURLConnectionDataDelegate,UIWebViewDelegate,UIDocumentInteractionControllerDelegate>
@@ -51,7 +52,7 @@
 //用户菜单按钮
 @property (weak, nonatomic) IBOutlet UIButton *caidan;
 
-//用来收集webView，返回的时候，删除VIew中最上层试图
+//用来收集webView，返回的时候，删除VIew中最上层试图·
 @property (nonatomic, strong) NSMutableArray *ViewArr;
 //用来收集跳转到页面的URL
 @property (nonatomic, strong) NSMutableArray *URLArr;
@@ -350,9 +351,17 @@
     //注销账号
     context[@"cancel"] = ^(){
         NSLog(@"%@",[[path UstringWithURL:nil] stringByAppendingString:@"/AppLogin_outService?method=LoginOut"] );
-//        dispatch_async(dispatch_get_main_queue(), ^{
-            [[KYNetManager sharedNetManager]POST:[[path UstringWithURL:nil] stringByAppendingString:@"/AppLogin_outService?method=LoginOut&loginUserId=c"] parameters:nil success:^(id result) {
-                 [self.navigationController popToRootViewControllerAnimated:YES];
+//        dispatch_async(dispatch_get_main_queue(), ^{ Documents/IP.plist
+        NSString * ip = [path UstringWithURL:nil];
+        NSString * path = [NSString stringWithFormat:@"%@/Documents/IP.plist",NSHomeDirectory()];
+        NSDictionary * dic = [NSDictionary dictionaryWithContentsOfFile:path];
+        NSLog(@"%@",[NSString base64Decode:dic[@"用户名"]]);
+            [[KYNetManager sharedNetManager]POST:[NSString stringWithFormat:@"%@/AppLogin_outService?method=LoginOut&loginUserId=%@",ip,[NSString base64Decode:dic[@"用户名"]]] parameters:nil success:^(id result) {
+                NSLog(@"%@",result);
+                 BOOL status = [[result objectForKey:@"status"] boolValue];
+                if (status) {
+                    [self.navigationController popToRootViewControllerAnimated:YES];
+                }
             } failure:^(NSError *error) {
                 NSLog(@"%@",error);
             }];
