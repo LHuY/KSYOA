@@ -16,7 +16,7 @@
 
 #import "returnMailViewController.h"
 #import "personData.h"
-#import "selectManViewController.h"
+#import "selectPapleViewController.h"
 #import "KYNetManager.h"
 #import "MBProgressHUD+PKX.h"
 #import "path.h"
@@ -484,8 +484,8 @@
     [self.headTitle resignFirstResponder];
 }
 - (IBAction)pushPerson:(id)sender {
-    UIStoryboard * sb = [UIStoryboard storyboardWithName:@"selectMan" bundle:nil];
-    selectManViewController * vc = [sb instantiateInitialViewController];
+    UIStoryboard * sb = [UIStoryboard storyboardWithName:@"selectPapleViewController" bundle:nil];
+    selectPapleViewController * vc = [sb instantiateInitialViewController];
     vc.arr = self.personData1;
     vc.blockName = ^(personData * model){
         if (self.arrayM.count) {
