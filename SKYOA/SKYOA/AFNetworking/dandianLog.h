@@ -9,5 +9,5 @@
 #import <Foundation/Foundation.h>
 
 @interface dandianLog : NSObject
--(void)PushLogWithURL:(NSString *)URL;
+-(BOOL)isOneClickLog:(NSString *)URL;
 @end

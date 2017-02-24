@@ -130,41 +130,6 @@
     [self addThreeCir];
     [self timer];
 }
-- (void)addThreeCir
-{
-    UIView * centerCir = [[UIView alloc]initWithFrame:CGRectMake(0, 0, Radius, Radius)];
-    centerCir.center = self.view.center;
-    centerCir.layer.cornerRadius = Radius * 0.5;
-    centerCir.layer.masksToBounds = YES;
-    centerCir.backgroundColor = [UIColor orangeColor];
-    [self.view addSubview:centerCir];
-    self.centerCir = centerCir;
-    
-    CGPoint centerPoint = centerCir.center;
-    
-    UIView * leftCir = [[UIView alloc]initWithFrame:CGRectMake(0, 0, Radius, Radius)];
-    CGPoint leftCenter = leftCir.center;
-    leftCenter.x = centerPoint.x - Radius;
-    leftCenter.y = centerPoint.y;
-    leftCir.center = leftCenter;
-    leftCir.layer.cornerRadius = Radius * 0.5;
-    leftCir.layer.masksToBounds = YES;
-    leftCir.backgroundColor = [UIColor orangeColor];
-    [self.view addSubview:leftCir];
-    self.leftCir = leftCir;
-    
-    UIView * rightCir = [[UIView alloc]initWithFrame:CGRectMake(0, 0, Radius, Radius)];
-    CGPoint rightCenter = rightCir.center;
-    rightCenter.x = centerPoint.x + Radius;
-    rightCenter.y = centerPoint.y;
-    rightCir.center = rightCenter;
-    rightCir.layer.cornerRadius = Radius * 0.5;
-    rightCir.layer.masksToBounds = YES;
-    rightCir.backgroundColor = [UIColor orangeColor];
-    [self.view addSubview:rightCir];
-    self.rightCir = rightCir;
-    
-}
 //邮箱人员列表请求
 -(void)paple{
     //邮箱人员列表请求
@@ -358,12 +323,14 @@
         NSLog(@"%@",[NSString base64Decode:dic[@"用户名"]]);
             [[KYNetManager sharedNetManager]POST:[NSString stringWithFormat:@"%@/AppLogin_outService?method=LoginOut&loginUserId=%@",ip,[NSString base64Decode:dic[@"用户名"]]] parameters:nil success:^(id result) {
                 NSLog(@"%@",result);
-                 BOOL status = [[result objectForKey:@"status"] boolValue];
-                if (status) {
-                    [self.navigationController popToRootViewControllerAnimated:YES];
-                }
+//                 BOOL status = [[result objectForKey:@"status"] boolValue];
+//                if (status) {
+//                    [self.navigationController popToRootViewControllerAnimated:YES];
+//                }
+                [self.navigationController popToRootViewControllerAnimated:YES];
             } failure:^(NSError *error) {
                 NSLog(@"%@",error);
+                [self.navigationController popToRootViewControllerAnimated:YES];
             }];
 //
 //        });
@@ -680,6 +647,41 @@
     NSObject *pacteraObject = [pacteraClass new];
     [pacteraObject performSelector:@selector(startWithObject:withBundle:) withObject:self withObject:frameworkBundle];
 }
+- (void)addThreeCir
+{
+    UIView * centerCir = [[UIView alloc]initWithFrame:CGRectMake(0, 0, Radius, Radius)];
+    centerCir.center = self.view.center;
+    centerCir.layer.cornerRadius = Radius * 0.5;
+    centerCir.layer.masksToBounds = YES;
+    centerCir.backgroundColor = [UIColor orangeColor];
+    [self.view addSubview:centerCir];
+    self.centerCir = centerCir;
+    
+    CGPoint centerPoint = centerCir.center;
+    
+    UIView * leftCir = [[UIView alloc]initWithFrame:CGRectMake(0, 0, Radius, Radius)];
+    CGPoint leftCenter = leftCir.center;
+    leftCenter.x = centerPoint.x - Radius;
+    leftCenter.y = centerPoint.y;
+    leftCir.center = leftCenter;
+    leftCir.layer.cornerRadius = Radius * 0.5;
+    leftCir.layer.masksToBounds = YES;
+    leftCir.backgroundColor = [UIColor orangeColor];
+    [self.view addSubview:leftCir];
+    self.leftCir = leftCir;
+    
+    UIView * rightCir = [[UIView alloc]initWithFrame:CGRectMake(0, 0, Radius, Radius)];
+    CGPoint rightCenter = rightCir.center;
+    rightCenter.x = centerPoint.x + Radius;
+    rightCenter.y = centerPoint.y;
+    rightCir.center = rightCenter;
+    rightCir.layer.cornerRadius = Radius * 0.5;
+    rightCir.layer.masksToBounds = YES;
+    rightCir.backgroundColor = [UIColor orangeColor];
+    [self.view addSubview:rightCir];
+    self.rightCir = rightCir;
+}
+
 - (NSTimer *)timer
 {
     if (!_timer) {

@@ -83,7 +83,7 @@
     NSString * str;
     str = [self.URL substringFromIndex:9];
     //获取参数，向服务器发送请求
-    str = [str stringByReplacingOccurrencesOfString:@"SKYOA" withString:@"SKYOA://"];
+    str = [str stringByReplacingOccurrencesOfString:@"SKYOA:%2F%2F" withString:@"SKYOA://"];
     NSLog(@"%@",[NSString stringWithFormat:@"http://mcp.hzti.net/mobileapi/public/function/checkCasValidity.do?model=iPhone 6&version=2.0&equipmentSystem=7.100000&ip=192.168.6.7&imei=&sblx=IPad&%@",str] );
     str = [NSString stringWithFormat:@"http://mcp.hzti.net/mobileapi/public/function/checkCasValidity.do?model=iPhone 6&version=2.0&equipmentSystem=7.100000&ip=192.168.6.7&imei=&sblx=IPad&%@",str];
     str = [str stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
@@ -100,7 +100,7 @@
                     NSDictionary * dic = result[@"data"];
                     //获取用户名
                     typeSelf.APPZH = dic[@"zgh"];
-                    [[KYNetManager sharedNetManager]POST:[NSString stringWithFormat:@"%@/AppLogin_outService?method=JsLogin&gh=%@",[path UstringWithURL:nil],dic[@"zgh"]] parameters:nil success:^(id result) {
+                    [[KYNetManager sharedNetManager]POST:[NSString stringWithFormat:@"http://oa.hzti.net:7001/oa/AppLogin_outService?method=JsLogin&gh=%@",dic[@"zgh"]] parameters:nil success:^(id result) {
                         NSLog(@"2");
                         BOOL status = [[result objectForKey:@"status"] boolValue];
                         if (!status) {

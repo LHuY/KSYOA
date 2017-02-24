@@ -71,6 +71,8 @@
 }
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options NS_AVAILABLE_IOS(9_0){
     NSString * canshu = url.absoluteString;
+//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"传过来的参数是" message:canshu delegate:self cancelButtonTitle:@"取消" otherButtonTitles:nil,  nil];
+//                    [alert show];
 //    NSString * str = @"SKYOA://?appid=SKYOA&childSecret=2C387AA2FC84686219E6498F40868C94&userid=20600003";
 //    str = [str substringFromIndex:9];
 //    //获取参数，向服务器发送请求

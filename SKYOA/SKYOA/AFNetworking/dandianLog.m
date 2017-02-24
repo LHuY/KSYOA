@@ -7,6 +7,12 @@
 //
 
 #import "dandianLog.h"
+#import "KYNetManager.h"
 
+@interface dandianLog ()
+//跳转时候用到单点登录记录账号
+@property (nonatomic, strong) NSString *APPZH;
+@end
 @implementation dandianLog
+
 @end

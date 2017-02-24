@@ -42,7 +42,7 @@
     NSMutableArray * section = [NSMutableArray array];
     //创建一个cell数组
     NSMutableArray * cell = [NSMutableArray array];
-    NSString * temp;
+//    NSString * temp;
 //    for (int i = 0; i < arr.count; ++i) {
 //        NSDictionary * dic = arr[i];
 //        if (dic[@"deptName"]&&dic[@"organType"]&&dic[@"deptId"]) {

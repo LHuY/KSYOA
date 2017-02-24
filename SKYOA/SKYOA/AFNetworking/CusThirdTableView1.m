@@ -229,7 +229,7 @@ static NSString *cellID=@"cellID";
 }
 #pragma mark  处理点击后的操作,返回结束的下标
 -(NSInteger)dealWithClickData:(ShowDataModel *)modelData index:(NSInteger)index tableView:(UITableView *)tableView{
-        BOOL isSelectAndHideView=modelData.grade==1; //选中第三级,
+//        BOOL isSelectAndHideView=modelData.grade==1; //选中第三级,
     
 //        if (isSelectAndHideView) {
 //            modelData.rightShowName=@"打钩";     //   测试用这个
