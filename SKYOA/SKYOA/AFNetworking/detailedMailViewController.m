@@ -63,7 +63,7 @@ static NSString *cellID=@"cellID";
 //}
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.automaticallyAdjustsScrollViewInsets =NO;
     if ([self.num isEqualToString:@"1"]) {
         self.call.hidden = YES;
         self.zhuanfa.hidden = YES;
@@ -93,7 +93,7 @@ static NSString *cellID=@"cellID";
 }
 //请求要显示详细信息数据
 -(void)showDataMail_ID:(NSString *)mail_ID{
-    
+    __weak typeof(self) weakSelf = self;
     NSString * postStr = [NSString stringWithFormat:@"%@/AppHttpService?method=GetEmail&emailId=%@",[path UstringWithURL:nil],mail_ID];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         [[KYNetManager sharedNetManager]POST:postStr parameters:nil success:^(id result) {
@@ -103,7 +103,7 @@ static NSString *cellID=@"cellID";
             }
             NSDictionary * dic = result[@"data"];
             
-            self.dic = dic;
+            weakSelf.dic = dic;
             NSLog(@"~~~~%@",dic);
             //获取所以附件
             NSArray * arr = self.dic[@"attachment"];
@@ -118,16 +118,16 @@ static NSString *cellID=@"cellID";
                 [btn setTitle:attachment[@"fileName"] forState:UIControlStateNormal ];
                 //添加一个点击事件
                 if (i == 0) {
-                    [btn addTarget:self action:@selector(bnt1) forControlEvents:UIControlEventTouchDown];
-                    self.btn1 = btn;
+                    [btn addTarget:weakSelf action:@selector(bnt1) forControlEvents:UIControlEventTouchDown];
+                    weakSelf.btn1 = btn;
                 }
                 if (i == 1) {
-                    self.btn2 = btn;
+                    weakSelf.btn2 = btn;
                     [btn addTarget:self action:@selector(bnt2) forControlEvents:UIControlEventTouchDown];
                 }
                 if (i == 2) {
-                    self.btn3 = btn;
-                    [btn addTarget:self action:@selector(bnt3) forControlEvents:UIControlEventTouchDown];
+                    weakSelf.btn3 = btn;
+                    [btn addTarget:weakSelf action:@selector(bnt3) forControlEvents:UIControlEventTouchDown];
                 }
                 //让按钮文字居中
                 btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
@@ -135,25 +135,37 @@ static NSString *cellID=@"cellID";
                 btn.titleLabel.font = [UIFont systemFontOfSize:15];
                 [btn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
                 [btn setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
-                [self.attachmentView addSubview:btn];
+                [weakSelf.attachmentView addSubview:btn];
             }
-            self.mail_Name_send.text = dic[@"sender"];
-            self.mail_Name.text = dic[@"receiver"];
-            self.titleLabel.text = dic[@"subject"];
-            self.htmlText = dic[@"content"];
+            weakSelf.mail_Name_send.text = dic[@"sender"];
+            weakSelf.mail_Name.text = dic[@"receiver"];
+            weakSelf.titleLabel.text = dic[@"subject"];
+            weakSelf.htmlText = dic[@"content"];
             
             //html文本转换格式显示textView
 //            NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[dic[@"content"] dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
 //            
 //            self.textView.attributedText = attributedString;
 //            NSLog(@"~~~%@",dic[@"content"]);
-                    self.textView.text = dic[@"content"];
+                    weakSelf.textView.text = dic[@"content"];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf layoutSubViews];
+            });
         } failure:^(NSError *error) {
             NSLog(@"失败%@",error);
         }];
         
     });
     
+}
+-(void)layoutSubViews{
+    if (self.textView.frame.size.height !=self.textView.contentSize.height) {
+        CGRect frame = self.textView.frame;
+        frame.size.height = self.textView.contentSize.height;
+        self.textView.frame = frame;
+        NSLog(@"~~~~%f",self.textView.frame.size.height);
+        [self viewDidLoad];
+    }
 }
 //附件1
 -(void)bnt1{
@@ -289,28 +301,6 @@ static NSString *cellID=@"cellID";
     return content6;
 //    NSString * head = [NSString stringWithFormat:@"%@<br/>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br/>%@发件时间%@",arr.firstObject,arr1.firstObject];
 }
-////如果不是转发，直接发送过来的,直接返回内容
-//-(NSString *)haoWith:(NSString *)HtmlText{
-//    NSArray * arr = [HtmlText componentsSeparatedByString:@"</p>"];
-//   
-//    
-//    NSLog(@"%@",arr.firstObject);
-//    NSString * str =[arr.firstObject substringFromIndex:3];
-//    return  str;
-//}
-////适合转发的时候调用
-////将Thml的内容提取出来
-////返回来的内容，第一个为信息内容，第二个为html去除信息内容的以外标签
-//-(NSArray *)stringWithHtmlText:(NSString*)string{
-//    NSArray * arr = [string componentsSeparatedByString:@"</div>"];
-//    NSString * head = arr.firstObject;
-//    head  = [NSString stringWithFormat:@"%@</div>",head];
-//    NSLog(@"~~~%lu",(unsigned long)head.length);
-//    //获取内容一下的标签
-//    NSString * str2= [self.htmlText substringFromIndex:head.length];
-//    NSLog(@"~~~%@",str2);
-//    return @[head,str2];
-//}
 //转发给朋友
 - (IBAction)copyMail:(id)sender {
     //跳转到编辑界面
@@ -365,7 +355,6 @@ static NSString *cellID=@"cellID";
     NSLog(@"%@",array);
     
 }
-
 
 
 

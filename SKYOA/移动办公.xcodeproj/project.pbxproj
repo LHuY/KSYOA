@@ -1324,7 +1324,7 @@
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.corsyn.LSKYOAY;
 				PRODUCT_NAME = "移动办公";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "161cfc1a-3447-4f03-bfbb-46cb17a75340";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1358,7 +1358,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.corsyn.LSKYOAY;
 				PRODUCT_NAME = "移动办公";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "161cfc1a-3447-4f03-bfbb-46cb17a75340";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

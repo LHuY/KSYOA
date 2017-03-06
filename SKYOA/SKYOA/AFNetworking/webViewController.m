@@ -24,6 +24,7 @@
 #import "attachmentTableController.h"
 #import "Upload.h"
 #import "NSString+base64.h"
+#import "setEmailViewController.h"
 
 #define Radius 20
 @interface webViewController ()<NSURLConnectionDataDelegate,UIWebViewDelegate,UIDocumentInteractionControllerDelegate>
@@ -173,7 +174,7 @@
     [self.URLArr removeLastObject];
     self.webView1 = self.ViewArr.lastObject;
     //如果只有一页，那么导航栏影藏
-    if (self.titleArr.count == 1) {
+    if (self.ViewArr.count == 1) {
         self.contentView.hidden = YES;
     }
 }
@@ -277,22 +278,40 @@
             };
     //返回 时候调用
     context[@"iosBack"] = ^(){
+        int index =0;
+        for (NSString * url in self.URLArr) {
+            index++;
+            NSLog(@"%d~~~%@",index,url);
+        }
         NSArray *args = [JSContext currentArguments];
         for (int i = 0; i < args.count; ++i) {
-            //第一个参数传过来的是URL，判断是否与self.URLarr数组中包含有，如果有包含，就把url的上层WebView都除去
+            //第一个参数传过来的是URL，判断是否与self.URLarr数组中包含有，如果有包含，就把url的上层WebView都除去   jsp/app/work/edoc/edocdetail.html
+
             JSValue * jsVal = args[i];
+            NSLog(@"~%d~~~%@",i,jsVal.toString);
             if (i == 0) {
                 //判断是否包含有这个URL
                 if([self.URLArr containsObject:jsVal.toString]){
                     //计算url对应的webview上面的View有几个
                     NSUInteger count = self.URLArr.count-[self.URLArr indexOfObject:jsVal.toString]-1;
+                    NSLog(@"zhidao ~~%lu %lu",(unsigned long)count,(unsigned long)self.ViewArr.count);
                     for (int i = 0; i < count; ++i) {
+                        //判断是否跳转到第一个VieW，是则隐藏，
+                        if ([self.URLArr.firstObject isEqualToString:jsVal.toString])
+                        {
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                            self.contentView.hidden = YES;
+                            });
+                        }
                         //依次删除URL上面的webview如层
-                        
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                                    //主线程操作，否则会蹦
                         [self.URLArr removeLastObject];
                         UIView * view = self.ViewArr.lastObject;
                         [view removeFromSuperview];
                         [self.ViewArr removeLastObject];
+                        });
+
                     }
                 }
             }
@@ -339,6 +358,9 @@
     context[@"about"] = ^(){
         NSLog(@"about");
         [self about];
+    };
+    context[@"createEmail"] = ^(){
+        [self createEmail];
     };
     context[@"newEdition"] = ^(){
         NSLog(@"newEdition检测新版本");
@@ -546,6 +568,14 @@
         [self.navigationController pushViewController:vc animated:YES];
     });
     
+}
+-(void)createEmail{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIStoryboard * sb = [UIStoryboard storyboardWithName:@"setEmail" bundle:nil];
+        setEmailViewController * vc = [sb instantiateInitialViewController];
+        
+        [self.navigationController pushViewController:vc animated:YES];
+    });
 }
 
 
